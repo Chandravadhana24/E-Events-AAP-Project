@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Project_Add events on Dashboard</string>
+    <string name="no_events">No Events</string>
+    <string name="my_events">My Events</string>
+    <string name="username">Username</string>
+    <string name="evento">EVENTO</string>
+    <string-array name="Genre">
+        <item>Dance</item>
+        <item>Mime</item>
+        <item>Debate</item>
+        <item>Singing</item>
+        <item>Drawing</item>
+        <item>Music Band</item>
+    </string-array>
+
+</resources>
