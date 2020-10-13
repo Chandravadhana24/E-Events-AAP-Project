@@ -9,8 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Create_Event"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".nav_drawer" />
+        <activity android:name=".Create_Event" />
+        <activity android:name=".Splashscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

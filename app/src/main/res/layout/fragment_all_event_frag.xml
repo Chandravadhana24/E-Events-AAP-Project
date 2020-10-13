@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/google_pixe"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+
+    android:background="@drawable/google_pixe"
+    tools:context=".all_event_frag">
+
+    <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
         android:id="@+id/top_bar"
-        android:layout_width="411dp"
+        android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -47,71 +52,43 @@
             android:id="@+id/imageView"
             android:layout_width="73dp"
             android:layout_height="match_parent"
-            android:src="@drawable/symbol" />
+            app:srcCompat="@drawable/symbol"
+            tools:ignore="VectorDrawableCompat" />
 
     </RelativeLayout>
 
 
+    <!-- No Events -->
 
     <TextView
         android:id="@+id/my_events"
         android:layout_width="179dp"
         android:layout_height="55dp"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="-8dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="60dp"
-        android:text="@string/my_events"
-        android:textAppearance="@style/my_events"
+        android:layout_marginLeft="237dp"
+        android:layout_marginTop="64dp"
         android:gravity="center_horizontal|center_vertical"
-        />
+        android:text="@string/noticeBoard"
+        android:textAppearance="@style/my_events" />
 
+        <fragment
+            android:id="@+id/rectangle_3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.example.project_addeventsondashboard.Public_Dashboard_Fragment"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="116dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginRight="0dp" />
 
-    <!-- No Events -->
-
-
-    <View
-        android:id="@+id/rectangle_3"
-        android:layout_width="473dp"
-        android:layout_height="604dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="116dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginRight="0dp"
-        android:background="@drawable/rectangle_3" />
-
-    <TextView
-        android:id="@+id/no_events"
-        android:layout_width="238dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="86dp"
-        android:layout_alignParentTop="true"
-        android:textSize="25dp"
-        android:layout_marginTop="375dp"
-        android:text="@string/no_events"
-        android:textAppearance="@style/no_events"
-        android:gravity="center_horizontal|center_vertical"
-        />
-
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="62dp"
-        android:layout_height="68dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="67dp"
-        android:layout_marginRight="7dp"
-        app:srcCompat="@drawable/vector"
-        tools:ignore="VectorDrawableCompat" />
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="10dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true">
@@ -125,7 +102,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
             android:src="@drawable/ic_baseline_add_24"
-            app:backgroundTint="#FFFFFF" />
+            app:backgroundTint="#FFFFFF"
+            tools:ignore="OnClick" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-</RelativeLayout>
+</FrameLayout>
