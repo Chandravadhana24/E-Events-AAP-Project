@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#D57149</color>
+    <color name="colorPrimaryDark">#D57149</color>
+    <color name="colorAccent">#F37121</color>
+    <color name="colorNav">#f08a5d</color>
+    <color name="btColor">#f4de15</color>
+    <color name="DodgerBlue">#1e90ff</color>
+    <color name="RoyalBlue">#4169e1</color>
+    <color name="Tomato">#FF9800</color>
+
+</resources>
