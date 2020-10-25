@@ -34,7 +34,7 @@ import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CreateAccountActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher, ExampleBottomSheetDialog.BottomSheetListener
+public class CreateAccountActivity extends AppCompatActivity implements View.OnClickListener, ExampleBottomSheetDialog.BottomSheetListener
 {
 
     EditText name, username, email, password;
@@ -45,7 +45,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     Button importimagebutton;
     final int CAMERA_REQUEST=18;
     SQLiteDatabase dbase;
-    String passwordregex = "(?=.[a-z])(?=.[0-9])(?=.[A-Z])(?=.[@#$%^&+=!])[a-zA-Z0-9@#$%^&+=!]{8,}";
+    String passwordregex ="^(?=.[0-9])(?=.[a-z])(?=.[A-Z])(?=.[@#$%^&-+=()])(?=\\S+$).{8,20}$";
     String usernameregex = "^[aA-zZ]\\w{5,29}$";
 
 
@@ -136,7 +136,39 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
             }
         });
-        password.addTextChangedListener(this);
+
+        password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                try{
+                    Log.d("Password : ",password.getText().toString());
+                    if(!isValidPassword(password.getText().toString()))
+                    {
+                        password.setError("invalid password");
+                    }
+                    else
+                    {
+                        result.setText("All Valid");
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
 
         createaccount = findViewById(R.id.createaccount);
         createaccount.setOnClickListener(this);
@@ -159,15 +191,33 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
 
 
-    public static boolean isValidPassword(final String password) {
+    public static boolean isValidPassword(String password)
+    {
 
-        Pattern pattern;
-        Matcher matcher;
-        final String passwordregex = "(?=.[a-z])(?=.[0-9])(?=.[A-Z])(?=.[@#$%^&+=!])[a-zA-Z0-9@#$%^&+=!]{8,}";
-        pattern = Pattern.compile(passwordregex);
-        matcher = pattern.matcher(password);
-        return matcher.matches();
+        // Regex to check valid password.
+        String regex = "^(?=.*[0-9])"
+                + "(?=.*[a-z])(?=.*[A-Z])"
+                + "(?=.*[@#$%^&+=])"
+                + "(?=\\S+$).{8,20}$";
 
+        // Compile the ReGex
+        Pattern p = Pattern.compile(regex);
+
+        // If the password is empty
+        // return false
+        Log.d("Password : ",password);
+        if (password == null) {
+            return false;
+        }
+
+        // Pattern class contains matcher() method
+        // to find matching between given password
+        // and regular expression.
+        Matcher m = p.matcher(password);
+        Log.d("Password : ",Boolean.toString(m.matches()));
+        // Return if the password
+        // matched the ReGex
+        return m.matches();
     }
 
     public boolean isValidUsername(final String username)
@@ -193,6 +243,9 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
                 result.setText("Your account has been created!");
                 dbase.execSQL("INSERT INTO users VALUES('" + username.getText().toString() + "','" + name.getText().toString() + "','" + password.getText().toString() + "','" + email.getText().toString() + "');");
                 Toast.makeText(this, "User registered successfully", Toast.LENGTH_SHORT).show();
+                Intent i=new Intent(this,nav_drawer.class);
+                startActivity(i);
+                finish();
             }
             else
                 result.setText("Please fill in appropriate details");
@@ -236,36 +289,6 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
 
         }*/
     }
-    @Override
-    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-    }
-
-    @Override
-    public void afterTextChanged(Editable editable) {
-        try{
-
-            if ((password.getText().toString().trim().matches(passwordregex)))
-            {
-                result.setText("All Valid");
-            }
-            else
-            {
-                password.setError("Invalid pw");
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-    }
-
 
 
     @Override
@@ -276,6 +299,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
     }
     @Override
     public void OnButtonClicked(Bitmap photo) {
+
         importimage.setImageBitmap(photo);
     }
 

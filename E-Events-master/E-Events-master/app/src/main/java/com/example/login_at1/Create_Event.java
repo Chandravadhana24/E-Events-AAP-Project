@@ -1,298 +1,206 @@
 package com.example.login_at1;
 
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.NoSuchElementException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.ByteArrayOutputStream;
+import java.sql.Date;
+import java.sql.Time;
+import java.util.Calendar;
 
-public class Create_Event extends AppCompatActivity implements View.OnClickListener, ExampleBottomSheetDialog.BottomSheetListener
-{
+public class Create_Event extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    EditText event_name, organisation_name,date_editText;
+    Button create;
+    ImageButton poster_imageButton;
+    Spinner genre_spinner;
+    int flag;
+    SQLiteDatabase db;
+    String whichGenre;
+    private static final int CAMERA_REQUEST = 123;
+    public class event{
+        String name,organisation,type;
+        Date start_date,end_date;
+        Time start_time,end_time;
 
-    EditText name, username, email, password;
-    Button createaccount;
-    TextView result, rememberme;
-    String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-    ImageView importimage;
-    Button importimagebutton;
-    final int CAMERA_REQUEST=18;
-    SQLiteDatabase dbase;
-    String passwordregex ="^(?=.[0-9])(?=.[a-z])(?=.[A-Z])(?=.[@#$%^&-+=()])(?=\\S+$).{8,20}$";
-    String usernameregex = "^[aA-zZ]\\w{5,29}$";
-
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //setTheme(R.style.Theme_AppCompat_Dialog);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_account);
-        name = findViewById(R.id.name);
-        username = findViewById(R.id.username);
-        email = findViewById(R.id.email);
-        password = findViewById(R.id.password);
-        result=findViewById(R.id.result);
-        rememberme=(TextView)findViewById(R.id.rememberme);
-        rememberme.setPaintFlags(rememberme.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+        setContentView(R.layout.activity_create__event);
 
-        dbase = openOrCreateDatabase("E-Events", Context.MODE_PRIVATE,null);
-        dbase.execSQL("CREATE TABLE IF NOT EXISTS users(username VARCHAR, name VARCHAR, password VARCHAR,email_id VARCHAR);");
+        event_name = findViewById(R.id.event_name);
+        organisation_name=findViewById(R.id.org_name);
+        genre_spinner = findViewById(R.id.genre_spinner);
+        poster_imageButton = findViewById(R.id.poster_image);
+        create = findViewById(R.id.createEvent_Button);
+        date_editText = findViewById(R.id.date_editText);
 
-        rememberme.setOnClickListener(new View.OnClickListener() {
+        db=openOrCreateDatabase("Events",MODE_PRIVATE,null);
+        db.execSQL("CREATE TABLE IF NOT EXISTS event(event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20));");
+
+        date_editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sf=getSharedPreferences("rememberuser", Context.MODE_PRIVATE);
-                SharedPreferences.Editor edit=sf.edit();
-                edit.clear(); // remove existing entries
-                edit.putString("username",username.getText().toString());
-                edit.putString("password",password.getText().toString());
-                edit.commit();
-                Intent i=new Intent(Create_Event.this,nav_drawer.class);
-                i.putExtra("username",username.getText().toString());
-                startActivity(i);
-
-            }
-        });
-
-        username.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                try
-                {
-                    if(!(username.getText().toString().trim().matches(usernameregex)))
-                    {
-                        username.setError("Invalid username");
+                final Calendar myCalendar = Calendar.getInstance();
+                int day, month, year;
+                day = myCalendar.get(Calendar.DAY_OF_MONTH);
+                month = myCalendar.get(Calendar.MONTH);
+                year = myCalendar.get(Calendar.YEAR);
+                DatePickerDialog.OnDateSetListener myDatePickerListener = new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                        date_editText.setText(i2 + "/" + (i1+1) + "/" + i);
                     }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                };
 
+                DatePickerDialog datePickerDialog = new DatePickerDialog(Create_Event.this,myDatePickerListener,year,month,day);
+                datePickerDialog.show();
             }
         });
 
-        email.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        ArrayAdapter<CharSequence> genreAdapter = ArrayAdapter.createFromResource(this, R.array.Genre, android.R.layout.simple_spinner_item);
+        genreAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        genre_spinner.setAdapter(genreAdapter);
+        genre_spinner.setOnItemSelectedListener(this);
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                try{
-                    if(!(email.getText().toString().trim().matches(emailPattern)))
-                    {
-                        email.setError("invalid email");
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
-        password.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                try{
-                    if(!isValidPassword(password.getText().toString()))
-                    {
-                        password.setError("invalid password");
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
-
-        createaccount = findViewById(R.id.createaccount);
-        createaccount.setOnClickListener(this);
-
-        importimagebutton = findViewById(R.id.importimagebutton);
-
-        importimagebutton.setOnClickListener(new View.OnClickListener() {
+        poster_imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //creating an instance of the class we created (Examplebottomsheetdialog)
+                AlertDialog.Builder builder = new AlertDialog.Builder(Create_Event.this);
+                final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(Create_Event.this,R.array.Choose_photo_from,android.R.layout.simple_list_item_1);
+                builder.setTitle("Choose photo from");
+                builder.setAdapter(adapter, new Dialog.OnClickListener(){
 
-                ExampleBottomSheetDialog bottomSheet= new ExampleBottomSheetDialog();
-                bottomSheet.show(getSupportFragmentManager(), "dpbottomsheet");
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String strName = (String) adapter.getItem(i);
+                        Log.d("Selection",strName);
+                        if(strName.equalsIgnoreCase("Gallery"))
+                        {
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(intent,24);
+                            return;
+                        }
+                        if (strName.equalsIgnoreCase("Camera"))
+                        {
+                            Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(camera_intent,CAMERA_REQUEST);
+                        }
+                    }
+                });
+                builder.show();
             }
         });
+        //Toast.makeText(Create_Event.this,event_name.getText().toString(),Toast.LENGTH_LONG).show();
+        flag=0; //EditText not touched yet
+        TextWatcher myTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-        importimage = (ImageView)findViewById(R.id.importimage);
-
-    }
-
-
-
-    public static boolean
-    isValidPassword(String password)
-    {
-
-        // Regex to check valid password.
-        String regex = "^(?=.*[0-9])"
-                + "(?=.[a-z])(?=.[A-Z])"
-                + "(?=.*[@#$%^&+=])"
-                + "(?=\\S+$).{8,20}$";
-
-        // Compile the ReGex
-        Pattern p = Pattern.compile(regex);
-
-        // If the password is empty
-        // return false
-        if (password == null) {
-            return false;
-        }
-
-        // Pattern class contains matcher() method
-        // to find matching between given password
-        // and regular expression.
-        Matcher m = p.matcher(password);
-
-        // Return if the password
-        // matched the ReGex
-        return m.matches();
-    }
-
-    public boolean isValidUsername(final String username)
-    {
-        Pattern pattern;
-        Matcher matcher;
-        final String usernameregex = "^[aA-zZ]\\w{5,29}$";
-        pattern = Pattern.compile(usernameregex);
-        matcher = pattern.matcher(username);
-        return matcher.matches();
-
-    }
-
-
-    @Override
-    public void onClick(View view) {
-
-        if (view.getId() == R.id.createaccount) {
-
-
-            if (result.getText() == "All Valid")
-            {
-                result.setText("Your account has been created!");
-                dbase.execSQL("INSERT INTO users VALUES('" + username.getText().toString() + "','" + name.getText().toString() + "','" + password.getText().toString() + "','" + email.getText().toString() + "');");
-                Toast.makeText(this, "User registered successfully", Toast.LENGTH_SHORT).show();
             }
-            else
-                result.setText("Please fill in appropriate details");
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                flag=1;
+                Log.d("Create_Btn",date_editText.getText().toString());
+                if((event_name.getText().toString().length()!=0)&&(organisation_name.getText().toString().length()!=0)&&(date_editText.getText().toString().length()!=0))
+                {
+                    create.setEnabled(true);
+                    create.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
+                    create.setTextColor(getResources().getColor(android.R.color.white));
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        };
+
+        event_name.addTextChangedListener(myTextWatcher);
+        organisation_name.addTextChangedListener(myTextWatcher);
+        date_editText.addTextChangedListener(myTextWatcher);
+
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                db.execSQL("INSERT INTO event VALUES('"+event_name.getText().toString()+"','"+organisation_name.getText().toString()+"','"+whichGenre+"','"+date_editText.getText().toString()+"');");
+
+                Toast.makeText(Create_Event.this,"Data entered",Toast.LENGTH_SHORT ).show();
+
+                Intent i = new Intent();
+                Intent myIntent = new Intent(Create_Event.this,nav_drawer.class);
+//
+                startActivity(myIntent);
 
 
+
+                //Toast.makeText(Create_Event.this,"I am clickable",Toast.LENGTH_LONG).show();
+
+            }
+        });
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        whichGenre = adapterView.getItemAtPosition(i).toString();
+        //Toast.makeText(this,whichGenre,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 24 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            ImageView imageView = (ImageView) findViewById(R.id.poster_image);
+            imageView.setImageURI(imageUri);
         }
-
-
-        /*if (view.getId() == R.id.importimagebutton) {
-
-            Toast.makeText(getApplicationContext(),"imageview clicked",Toast.LENGTH_SHORT).show();
-            Log.d("insde","insideimportimage");
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplicationContext());
-            // Setting Dialog Title
-            alertDialog.setTitle("Import image via");
-            // Setting Dialog Message
-            alertDialog.setMessage("Capture an image or choose from your gallery?");
-            // Setting Icon to Dialog
-            alertDialog.setIcon(R.drawable.image);
-            // Setting Positive "Yes" Button
-
-            alertDialog.setPositiveButton("Camera", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent,CAMERA_REQUEST);
-                }
-                protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-                    //super.onActivityResult(requestCode,resultCode,data);
-                    if (requestCode == CAMERA_REQUEST) {
-                        Bitmap photo = (Bitmap) data.getExtras().get("data");
-                        importimage.setImageBitmap(photo);
-                        //Toast.makeText(this,String.valueOf(resultCode), Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-            });
-
-            alertDialog.show();
-
-        }*/
+        if (requestCode == 123 && resultCode == RESULT_OK)
+        {
+            Bitmap myCamPic = (Bitmap) data.getExtras().get("data");
+            poster_imageButton.setImageBitmap(myCamPic);
+        }
     }
 
-
-    @Override
-    public void OnButtonClicked(Uri imageuri) {
-        //Log.d("working", "entered main activity's onButtonVlicked");
-        //Toast.makeText(this, "entered main activity's onButtonVlicked", Toast.LENGTH_SHORT).show();
-        importimage.setImageURI(imageuri);
+    private byte[] convertBitMap_to_byteArray(Bitmap _bitmap)
+    {
+        ByteArrayOutputStream _bs = new ByteArrayOutputStream();
+        _bitmap.compress(Bitmap.CompressFormat.PNG, 50, _bs);
+        return  _bs.toByteArray();
     }
-    @Override
-    public void OnButtonClicked(Bitmap photo) {
-
-        importimage.setImageBitmap(photo);
-    }
-
 }

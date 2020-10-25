@@ -25,8 +25,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="bd44c506-f31f-4ae8-8e74-3049491b7182">
-        <schema name="" object-types="table, view, column, index, constraint, dataset trigger" />
-        <schema name="main" object-types="table, view, column, index, constraint, dataset trigger" />
+        <schema name="main" object-types="view, table" />
       </connection>
     </loaded-nodes>
   </component>
@@ -44,6 +43,7 @@
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="bd44c506-f31f-4ae8-8e74-3049491b7182" dataset="main.users" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="bd44c506-f31f-4ae8-8e74-3049491b7182" dataset=".event" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="bd44c506-f31f-4ae8-8e74-3049491b7182" dataset="main.android_metadata" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -83,8 +83,7 @@
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="C:\Databases_Android\E-Events" schema="main" />
-            <file path="C:\Databases_Android\Events" schema="" />
+            <file path="C:\Databases_Android\Events" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />

@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Create_Event"></activity>
+        <activity android:name=".CreateAccountActivity"></activity>
         <activity android:name=".nav_drawer" />
         <activity android:name=".Splashscreen" >
             <intent-filter>
@@ -18,7 +19,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CreateAccountActivity" />
         <activity android:name=".MainActivity"/>
 
 

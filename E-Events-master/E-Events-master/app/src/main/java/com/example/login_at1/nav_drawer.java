@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,30 +14,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class nav_drawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,communicator {
+public class nav_drawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     final int MY_REQ_CODE = 2411;
-    String name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_drawer);
 
-
-        Bundle b=getIntent().getExtras();
-        name=b.getString("username");
-
-
-
         Toolbar toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new all_event_frag()).commit();
-
 
         drawer=findViewById(R.id.drawer_layout);
         NavigationView navigationView=findViewById(R.id.nav_view);
@@ -75,12 +64,12 @@ public class nav_drawer extends AppCompatActivity implements NavigationView.OnNa
             case R.id.allEvents:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new all_event_frag()).commit();
                 break;
+
             case R.id.logout:
                 Intent i=new Intent(nav_drawer.this,MainActivity.class);
                 startActivity(i);
-                Toast.makeText(nav_drawer.this,"LogOut Successful",Toast.LENGTH_SHORT).show();
+                finish();
                 break;
-
         }
         return true;
     }
@@ -102,14 +91,4 @@ public class nav_drawer extends AppCompatActivity implements NavigationView.OnNa
         }
 
     }
-
-
-    @Override
-    public void sendAllEvents() {
-        FragmentManager f= getSupportFragmentManager();
-        all_event_frag fm = (all_event_frag)f.findFragmentById(R.id.fragment_container);
-        fm.changeData(name);
-    }
-
-
 }
