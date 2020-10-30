@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -25,29 +26,27 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Calendar;
 
 public class Create_Event extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    EditText event_name, organisation_name,date_editText;
+    EditText event_name, organisation_name,date_editText,venue_editText;
     Button create;
     ImageButton poster_imageButton;
     Spinner genre_spinner;
     int flag;
+    byte[] image_byteArray;
     SQLiteDatabase db;
     String whichGenre;
     private static final int CAMERA_REQUEST = 123;
-    public class event{
-        String name,organisation,type;
-        Date start_date,end_date;
-        Time start_time,end_time;
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +59,10 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         poster_imageButton = findViewById(R.id.poster_image);
         create = findViewById(R.id.createEvent_Button);
         date_editText = findViewById(R.id.date_editText);
+        venue_editText = findViewById(R.id.venue_editText);
 
         db=openOrCreateDatabase("Events",MODE_PRIVATE,null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS event(event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20));");
+        db.execSQL("CREATE TABLE IF NOT EXISTS event(event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
 
         date_editText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +83,32 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
                 datePickerDialog.show();
             }
         });
+        venue_editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(Create_Event.this,view);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        //if(menuItem.getItemId()==R.id.item1_locate)
+                       // {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(Create_Event.this);
+                            EditText inputLocation = new EditText(Create_Event.this);
+                            builder.setView(inputLocation);
+                            builder.show();
 
+                            String location_url = inputLocation.getText().toString();
+                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(location_url));
+                            //startActivity(mapIntent);
+                       // }
+                        return true;
+                    }
+                });
+                popupMenu.inflate(R.menu.popup_menu_for_venue);
+                popupMenu.show();
+                //Intent mapIntent = new Intent(Intent.ACTION_VIEW,"geo")
+            }
+        });
         ArrayAdapter<CharSequence> genreAdapter = ArrayAdapter.createFromResource(this, R.array.Genre, android.R.layout.simple_spinner_item);
         genreAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genre_spinner.setAdapter(genreAdapter);
@@ -154,18 +179,14 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View view) {
 
-                db.execSQL("INSERT INTO event VALUES('"+event_name.getText().toString()+"','"+organisation_name.getText().toString()+"','"+whichGenre+"','"+date_editText.getText().toString()+"');");
+                db.execSQL("INSERT INTO event VALUES('"+event_name.getText().toString()+"','"+organisation_name.getText().toString()+"','"+whichGenre+"','"+date_editText.getText().toString() + "','" + image_byteArray +"');");
 
                 Toast.makeText(Create_Event.this,"Data entered",Toast.LENGTH_SHORT ).show();
 
                 Intent i = new Intent();
                 Intent myIntent = new Intent(Create_Event.this,nav_drawer.class);
-//
+
                 startActivity(myIntent);
-
-
-
-                //Toast.makeText(Create_Event.this,"I am clickable",Toast.LENGTH_LONG).show();
 
             }
         });
@@ -174,7 +195,6 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         whichGenre = adapterView.getItemAtPosition(i).toString();
-        //Toast.makeText(this,whichGenre,Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -187,20 +207,37 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
 
         if (requestCode == 24 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
-            ImageView imageView = (ImageView) findViewById(R.id.poster_image);
+            ImageView imageView = findViewById(R.id.poster_image);
             imageView.setImageURI(imageUri);
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+
+            int size = bitmap.getRowBytes() * bitmap.getHeight();
+            ByteBuffer byteBuffer = ByteBuffer.allocate(size);
+            bitmap.copyPixelsToBuffer(byteBuffer);
+            image_byteArray = byteBuffer.array();
+            Log.d("IS image arr null",Boolean.toString(image_byteArray==null));
         }
         if (requestCode == 123 && resultCode == RESULT_OK)
         {
             Bitmap myCamPic = (Bitmap) data.getExtras().get("data");
             poster_imageButton.setImageBitmap(myCamPic);
+            int width = myCamPic.getWidth();
+            int height = myCamPic.getHeight();
+
+            int size = myCamPic.getRowBytes() * myCamPic.getHeight();
+            ByteBuffer byteBuffer = ByteBuffer.allocate(size);
+            myCamPic.copyPixelsToBuffer(byteBuffer);
+            image_byteArray = byteBuffer.array();
+            Log.d("Create_Event",Boolean.toString(image_byteArray==null));
         }
     }
 
-    private byte[] convertBitMap_to_byteArray(Bitmap _bitmap)
-    {
-        ByteArrayOutputStream _bs = new ByteArrayOutputStream();
-        _bitmap.compress(Bitmap.CompressFormat.PNG, 50, _bs);
-        return  _bs.toByteArray();
-    }
+
 }

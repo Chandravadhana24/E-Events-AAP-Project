@@ -70,9 +70,12 @@ public class MainActivity extends Activity  {
                     showMessage("Error","Please Enter all Values");
                 }
 
-                else{
-
-                    Cursor c = dbase.rawQuery("SELECT username,name,password,email_id FROM users WHERE username='"+editTextentername.getText().toString()+"';",null);
+                else {
+                    if (dbase == null) {
+                        Toast.makeText(MainActivity.this, "Did not register. Please Sign up.", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Cursor c = dbase.rawQuery("SELECT username,name,password,email_id FROM users WHERE username='" + editTextentername.getText().toString() + "';", null);
                     if (c.moveToFirst()) {
                         // Displaying record if found 
                         //String u  = c.getString(0);
@@ -80,16 +83,14 @@ public class MainActivity extends Activity  {
                         Log.d("msg from database", p);
                         Log.d("msg from edittext", editTextpassword.getText().toString());
                         //String mobile = c.getString(2);
-                        if(p.equals(editTextpassword.getText().toString()))
-                        {
-                            Toast.makeText(MainActivity.this,"Login Successful", Toast.LENGTH_LONG).show();
-                            Intent i=new Intent(MainActivity.this,nav_drawer.class);
-                            i.putExtra("username",editTextentername.getText().toString());
+                        if (p.equals(editTextpassword.getText().toString())) {
+                            Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
+                            Intent i = new Intent(MainActivity.this, nav_drawer.class);
+                            i.putExtra("username", editTextentername.getText().toString());
                             startActivity(i);
 
-                        }
-                        else{
-                            Toast.makeText(MainActivity.this, "Wrong Credentials",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Wrong Credentials", Toast.LENGTH_SHORT).show();
 
                             textViewattemptsleft.setVisibility(View.VISIBLE);
                             textViewattemptsleft.setBackgroundColor(Color.RED);
@@ -100,21 +101,19 @@ public class MainActivity extends Activity  {
                                 buttonlogin.setEnabled(false);
                             }
                         }
-                    }
-                    else
-                    {
-                        Toast.makeText(MainActivity.this, "Wrong Credentials",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Wrong Credentials", Toast.LENGTH_SHORT).show();
 
                         textViewattemptsleft.setVisibility(View.VISIBLE);
                         textViewattemptsleft.setBackgroundColor(Color.RED);
                         counter--;
-                        textViewattemptsleft.setText(" "+Integer.toString(counter)+" ");
+                        textViewattemptsleft.setText(" " + Integer.toString(counter) + " ");
 
                         if (counter == 0) {
                             buttonlogin.setEnabled(false);
                         }
                     }
-
+                }
 
                 }
 
