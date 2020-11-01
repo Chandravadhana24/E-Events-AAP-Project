@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +52,8 @@ public class MainActivity extends Activity  {
         take = (ImageButton) findViewById(R.id.take);
 
         buttonsignup = (Button)findViewById(R.id.buttonsignup);
-        dbase= openOrCreateDatabase("E-Events", Context.MODE_PRIVATE,null);
+        dbase= openOrCreateDatabase("Events", Context.MODE_PRIVATE,null);
+
         buttonsignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -62,7 +62,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         rememberme=(TextView)findViewById(R.id.rememberme);
         rememberme.setPaintFlags(rememberme.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
 
-        dbase = openOrCreateDatabase("E-Events", Context.MODE_PRIVATE,null);
+        dbase = openOrCreateDatabase("Events", Context.MODE_PRIVATE,null);
         dbase.execSQL("CREATE TABLE IF NOT EXISTS users(username VARCHAR, name VARCHAR, password VARCHAR,email_id VARCHAR);");
 
         rememberme.setOnClickListener(new View.OnClickListener() {
@@ -241,6 +241,7 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
             if (result.getText() == "All Valid")
             {
                 result.setText("Your account has been created!");
+                dbase.execSQL("CREATE TABLE IF NOT EXISTS users(username VARCHAR, name VARCHAR, password VARCHAR,email_id VARCHAR);");
                 dbase.execSQL("INSERT INTO users VALUES('" + username.getText().toString() + "','" + name.getText().toString() + "','" + password.getText().toString() + "','" + email.getText().toString() + "');");
                 Toast.makeText(this, "User registered successfully", Toast.LENGTH_SHORT).show();
                 Intent i=new Intent(this,nav_drawer.class);
