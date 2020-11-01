@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@android:color/holo_orange_dark"
     android:padding="10dp"
     tools:context=".Public_Dashboard_Fragment">
 
