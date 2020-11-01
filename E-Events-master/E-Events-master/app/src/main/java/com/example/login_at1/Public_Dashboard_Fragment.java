@@ -57,12 +57,12 @@ public class Public_Dashboard_Fragment extends Fragment {
                     Toast.makeText(getContext(), "No Record Found", Toast.LENGTH_SHORT).show();
                     return v;
                 }
-
+                list_of_Events.add(new Event(c.getString(0), c.getString(1), c.getString(2), c.getString(3)));
                 stringBuffer = new StringBuffer();
                 Date date1 = null;
 
                 while (c.moveToNext()) {
-
+                    //Log.d()
                     list_of_Events.add(new Event(c.getString(0), c.getString(1), c.getString(2), c.getString(3)));
                     /*stringBuffer.append("Event Name:" + c.getString(0) + "\n");
                     stringBuffer.append("Organization Name:" + c.getString(1) + "\n");
