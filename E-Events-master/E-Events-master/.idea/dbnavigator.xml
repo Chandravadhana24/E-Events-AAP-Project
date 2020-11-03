@@ -23,11 +23,7 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes>
-      <connection connection-id="e32d478a-23ef-429a-bae2-6ca9bb9a45f0">
-        <schema name="main" object-types="table, constraint, column, dataset trigger, index, view" />
-      </connection>
-    </loaded-nodes>
+    <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="e32d478a-23ef-429a-bae2-6ca9bb9a45f0">
@@ -35,9 +31,7 @@
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="e32d478a-23ef-429a-bae2-6ca9bb9a45f0" object-ref="schemas/main/tables/event" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="e32d478a-23ef-429a-bae2-6ca9bb9a45f0" />

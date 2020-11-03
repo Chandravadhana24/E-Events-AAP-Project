@@ -39,6 +39,7 @@ import java.util.Calendar;
 
 public class Create_Event extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     EditText event_name, organisation_name,date_editText,venue_editText;
+    //
     Button create;
     ImageButton poster_imageButton;
     Spinner genre_spinner;

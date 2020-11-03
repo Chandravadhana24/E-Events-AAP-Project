@@ -23,7 +23,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/E-Events-master" />
     <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
   </component>
   <component name="SvnConfiguration">
@@ -40,9 +40,10 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="463" y="118" key="FileChooserDialogImpl" timestamp="1603812246094">
-      <screen x="0" y="0" width="1366" height="728" />
+    <state x="434" y="110" key="FileChooserDialogImpl" timestamp="1604415860748">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
+    <state x="434" y="110" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1604415860748" />
     <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1603812246094" />
   </component>
 </project>
