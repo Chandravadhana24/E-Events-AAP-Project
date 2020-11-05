@@ -39,7 +39,6 @@ import java.util.Calendar;
 
 public class Create_Event extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     EditText event_name, organisation_name,date_editText,venue_editText;
-    //
     Button create;
     ImageButton poster_imageButton;
     Spinner genre_spinner;
@@ -48,6 +47,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
     SQLiteDatabase db;
     String whichGenre;
     private static final int CAMERA_REQUEST = 123;
+    static int no=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +63,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         venue_editText = findViewById(R.id.venue_editText);
 
         db=openOrCreateDatabase("Events",MODE_PRIVATE,null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS event(event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20),event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
 
         date_editText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,7 +180,8 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View view) {
 
-                db.execSQL("INSERT INTO event VALUES('"+event_name.getText().toString()+"','"+organisation_name.getText().toString()+"','"+whichGenre+"','"+date_editText.getText().toString() + "','" + image_byteArray +"');");
+                no++;
+                db.execSQL("INSERT INTO event VALUES('"+Integer.toString(no) + "','"+event_name.getText().toString()+"','"+organisation_name.getText().toString()+"','"+whichGenre+"','"+date_editText.getText().toString() + "','" + image_byteArray +"');");
 
                 Toast.makeText(Create_Event.this,"Data entered",Toast.LENGTH_SHORT ).show();
 

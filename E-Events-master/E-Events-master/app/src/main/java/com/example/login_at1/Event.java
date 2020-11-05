@@ -6,19 +6,29 @@ import java.sql.Date;
 import java.sql.Time;
 
 public class Event {
-    private String name,organisation,type,start_date;
+    private String no,name,organisation,type,start_date;
     private Bitmap poster;
 
     public Event() {
 
     }
 
-    public Event(String name, String organisation, String type, String start_date){   //Bitmap poster) {
+    public Event(String no,String name, String organisation, String type, String start_date){   //Bitmap poster) {
+
+        this.no=no;
         this.name = name;
         this.organisation = organisation;
         this.type = type;
         this.start_date = start_date;
         //this.poster = poster;
+    }
+
+    public String getNo() {
+        return no;
+    }
+
+    public void setNo(String no) {
+        this.no = no;
     }
 
     public String getName() {

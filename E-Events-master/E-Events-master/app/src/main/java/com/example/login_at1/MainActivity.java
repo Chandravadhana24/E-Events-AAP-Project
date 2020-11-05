@@ -2,6 +2,7 @@ package com.example.login_at1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -87,8 +88,12 @@ public class MainActivity extends Activity  {
                         //String mobile = c.getString(2);
                         if (p.equals(editTextpassword.getText().toString())) {
                             Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
+                            SharedPreferences user=getSharedPreferences("curruser",Context.MODE_PRIVATE);
+                            SharedPreferences.Editor edit=user.edit();
+                            edit.putString("username",editTextentername.getText().toString());
+                            edit.commit();
                             Intent i = new Intent(MainActivity.this, nav_drawer.class);
-                            i.putExtra("username", editTextentername.getText().toString());
+                            //i.putExtra("username", editTextentername.getText().toString());
                             startActivity(i);
 
                         } else {

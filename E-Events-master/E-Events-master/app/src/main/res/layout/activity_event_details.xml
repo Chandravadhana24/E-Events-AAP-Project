@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".eventDetails"
+    android:layout_gravity="center_horizontal">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="236dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/noposter" />
+
+    <TextView
+        android:id="@+id/eventName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Event Name"
+        android:textColor="@color/colorAccent"
+        android:textSize="35sp"
+        android:textStyle="bold|italic"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:id="@+id/eventDate"
+        android:text="Date :"
+        android:textColor="@color/colorAccent"
+        android:textSize="25sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:id="@+id/eventOrganizer"
+        android:text="Organized by "
+        android:textColor="@color/colorAccent"
+        android:textSize="25sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:id="@+id/eventGenre"
+        android:text="Genre :"
+        android:textColor="@color/colorAccent"
+        android:textSize="25sp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35sp"
+        android:text="Register"
+        android:textColor="#FFFFFF"
+        android:id="@+id/reg"
+        android:background="@color/colorAccent"/>
+
+
+
+</LinearLayout>

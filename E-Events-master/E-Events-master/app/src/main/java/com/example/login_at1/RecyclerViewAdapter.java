@@ -17,10 +17,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private Context mContext;
     private List<Event> allEvents_list;
+    private RecyclerViewClickListener listener;
 
-    public RecyclerViewAdapter(Context mContext, List<Event> allEvents_list) {
+    public RecyclerViewAdapter(Context mContext, List<Event> allEvents_list,RecyclerViewClickListener listener) {
         this.mContext = mContext;
         this.allEvents_list = allEvents_list;
+        this.listener=listener;
     }
 
     @NonNull
@@ -34,7 +36,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
-        holder.event_title.setText(allEvents_list.get(position).getName());
+        holder.event_title.setText(allEvents_list.get(position).getNo()+". "+allEvents_list.get(position).getName());
         holder.org_name.setText(allEvents_list.get(position).getOrganisation());
         holder.genre.setText(allEvents_list.get(position).getType());
         holder.date.setText(allEvents_list.get(position).getStart_date().toString());
@@ -47,7 +49,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return allEvents_list.size();
     }
 
-    public static class myViewHolder extends RecyclerView.ViewHolder{
+    public interface RecyclerViewClickListener{
+        void onClick(View v, int position);
+    }
+
+    public class myViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView event_title,org_name,genre,date;
         //ImageView poster;
         public myViewHolder(@NonNull View itemView) {
@@ -58,6 +64,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             genre = itemView.findViewById(R.id.genre_textView);
             date = itemView.findViewById(R.id.date_textView);
             //poster = itemView.findViewById(R.id.poster_image_view);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            listener.onClick(view,getAdapterPosition());
         }
     }
 }
