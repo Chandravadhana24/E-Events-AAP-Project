@@ -74,10 +74,13 @@ public class nav_drawer extends AppCompatActivity implements NavigationView.OnNa
                 break;
 
             case R.id.logout:
-                Intent i=new Intent(nav_drawer.this,MainActivity.class);
-                startActivity(i);
+                Intent i4=new Intent(nav_drawer.this,MainActivity.class);
+                startActivity(i4);
                 finish();
                 break;
+            case R.id.settings:
+                Intent intent=new Intent(nav_drawer.this,SettingsActivity.class);
+                startActivity(intent);
         }
         return true;
     }
