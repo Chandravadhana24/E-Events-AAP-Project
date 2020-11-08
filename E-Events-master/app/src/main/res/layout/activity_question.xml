@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FF9800"
+        android:textStyle="italic|bold"
+        android:textColor="#FF2A3332"
+        android:drawableLeft="@drawable/question"
+        android:text=" Ask a question"
+        android:textSize="40dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/no"
+        android:textSize="20dp"
+        android:background="#11000000"
+        android:textColor="#FF2A3332"
+        android:hint="E - Events"
+        android:layout_marginTop="100dp"/>
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/msg"
+        android:textSize="20dp"
+        android:background="#11000000"
+        android:textColor="#FF2A3332"
+        android:hint="Enter the SMS text"
+        android:layout_marginTop="145dp"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FF2A3332"
+        android:id="@+id/sms"
+        android:text=" SMS "
+        android:textStyle="italic|bold"
+        android:textSize="20dp"
+        android:layout_marginLeft="100dp"
+        android:background="#FF9800"
+        android:layout_marginTop="250dp"/>
+
+    <Button
+        android:id="@+id/backq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textStyle="italic|bold"
+        android:textSize="20dp"
+        android:textColor="#FF2A3332"
+        android:layout_toRightOf="@+id/sms"
+        android:layout_marginTop="250dp"
+        android:background="#FF9800"
+        android:text=" Back "
+        android:textAllCaps="false" />
+
+</RelativeLayout>
