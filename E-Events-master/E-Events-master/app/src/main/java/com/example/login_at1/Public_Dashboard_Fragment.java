@@ -3,6 +3,7 @@ package com.example.login_at1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.DocumentsContract;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.google.android.material.tabs.TabLayout;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -35,7 +39,7 @@ import java.util.List;
 import static java.sql.Types.BLOB;
 
 
-public class Public_Dashboard_Fragment extends Fragment {
+public class Public_Dashboard_Fragment extends Fragment implements RecyclerViewAdapter.RecyclerViewClickListener {
     SQLiteDatabase database;
     Bitmap poster_image_bitmap;
     StringBuffer stringBuffer;
@@ -43,7 +47,8 @@ public class Public_Dashboard_Fragment extends Fragment {
     List<Event> list_of_Events;
     RecyclerView myRV;
     RecyclerViewAdapter.RecyclerViewClickListener listener;
-    int REQ_CODE=24;
+    final int MYREQUEST = 11;
+
 
 
     @Override
@@ -63,12 +68,11 @@ public class Public_Dashboard_Fragment extends Fragment {
 
             // database.execSQL("CREATE TABLE IF NOT EXISTS event(event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
 
-            database.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20),event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
+            database.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20) primary key,event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
 
             database.execSQL("CREATE TABLE IF NOT EXISTS myEvent(username VARCHAR(20),position NUMBER);");
 
             Cursor c = database.rawQuery("SELECT * FROM event", null);
-            database.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20),event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
 
             if (database != null) {
                 //Toast.makeText(getActivity().getApplicationContext(), "DB is there", Toast.LENGTH_SHORT).show();
@@ -77,6 +81,9 @@ public class Public_Dashboard_Fragment extends Fragment {
                         Toast.makeText(getContext(), "No Record Found", Toast.LENGTH_SHORT).show();
                         return v;
                     }
+
+
+
                     list_of_Events.add(new Event(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4)));
                     stringBuffer = new StringBuffer();
                     Date date1 = null;
@@ -84,18 +91,22 @@ public class Public_Dashboard_Fragment extends Fragment {
                     while (c.moveToNext()) {
                         //Log.d()
                         list_of_Events.add(new Event(c.getString(0), c.getString(1), c.getString(2), c.getString(3),c.getString(4)));
-                    /*stringBuffer.append("Event Name:" + c.getString(0) + "\n");
-                    stringBuffer.append("Organization Name:" + c.getString(1) + "\n");
-                    stringBuffer.append("Genre:" + c.getString(2) + "\n");
-                    stringBuffer.append("Date:" + c.getString(3) + "\n");*/
+
                     }
                     //Toast.makeText(getContext(), stringBuffer, Toast.LENGTH_SHORT).show();
+
+                    SharedPreferences user=getContext().getSharedPreferences("EventNo",Context.MODE_PRIVATE);
+                    SharedPreferences.Editor edit=user.edit();
+                    Log.d("List","List Size:"+Integer.toString(list_of_Events.size()));
+                    edit.putString("number",Integer.toString(list_of_Events.size()));
+                    edit.commit();
+
                     myRV = v.findViewById(R.id.recycler_view);
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(), list_of_Events, listener);
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(), list_of_Events, this);
                     myRV.setLayoutManager(new GridLayoutManager(getActivity(), 1));
                     myRV.setLayoutManager(new GridLayoutManager(getActivity(), 1));
                     myRV.setAdapter(adapter);
-                    setOnClickListener();
+
                 }
             } else {
                 TextView noEvents_textview = new TextView(getActivity());
@@ -118,17 +129,13 @@ public class Public_Dashboard_Fragment extends Fragment {
         super.onResume();
     }
 
-    private void setOnClickListener() {
-        listener = new RecyclerViewAdapter.RecyclerViewClickListener() {
 
-            @Override
-            public void onClick(View v, int position) {
+    @Override
+    public void onClick(int position) {
+        Log.d("MSG:","clicked "+list_of_Events.get(position).getNo());
+        Intent i=new Intent(getActivity(),eventDetails.class);
+        i.putExtra("position",list_of_Events.get(position).getNo());
+        startActivityForResult(i,MYREQUEST);
 
-                Intent i= new Intent(getActivity(),eventDetails.class);
-                String pos=list_of_Events.get(position).getNo();
-                i.putExtra("event",pos);
-                startActivityForResult(i,REQ_CODE);
-            }
-        };
     }
 }

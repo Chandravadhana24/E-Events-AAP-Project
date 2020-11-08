@@ -20,7 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Event Name"
         android:textColor="@color/colorAccent"
         android:textSize="35sp"
         android:textStyle="bold|italic"/>
@@ -29,7 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:id="@+id/eventDate"
-        android:text="Date :"
         android:textColor="@color/colorAccent"
         android:textSize="25sp"/>
 
@@ -38,7 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:id="@+id/eventOrganizer"
-        android:text="Organized by "
         android:textColor="@color/colorAccent"
         android:textSize="25sp"/>
 
@@ -47,7 +44,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:id="@+id/eventGenre"
-        android:text="Genre :"
         android:textColor="@color/colorAccent"
         android:textSize="25sp"/>
 

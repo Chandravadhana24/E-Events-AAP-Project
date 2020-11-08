@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -13,32 +14,44 @@ public class eventDetails extends AppCompatActivity {
 
     TextView name,date,organization,genre;
     Button register;
-    String num,ename,edate,eorg,egen;
+    String num,ename="",edate="",eorg="",egen="";
     SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
-        name=findViewById(R.id.event_name);
-        date=findViewById(R.id.eventDate);
-        organization=findViewById(R.id.eventOrganizer);
-        genre=findViewById(R.id.eventGenre);
-        register=findViewById(R.id.reg);
+
+        name=(TextView)findViewById(R.id.eventName);
+        date=(TextView)findViewById(R.id.eventDate);
+        organization=(TextView)findViewById(R.id.eventOrganizer);
+        genre=(TextView)findViewById(R.id.eventGenre);
+        register=(Button)findViewById(R.id.reg);
         Bundle b=getIntent().getExtras();
-        num=b.getString("event");
+        num=b.getString("position");
+        Log.d("pos","clicked position:"+num);
         db=openOrCreateDatabase("Events", Context.MODE_PRIVATE, null);
 
-        Cursor c = db.rawQuery("SELECT * FROM event where eventNo="+num, null);
+        if(db!= null)
+        {
+            Cursor c = db.rawQuery("SELECT eventNo,event,organization,genre,eventDate FROM event WHERE eventNo='"+num.toString()+"';", null);
 
-        ename=c.getString(1);
-        edate=c.getString(2);
-        eorg=c.getString(3);
-        egen=c.getString(4);
+            if(c.moveToFirst())
+            {
+                ename=c.getString(1);
+                edate=c.getString(4);
+                eorg=c.getString(2);
+                egen=c.getString(3);
+            }
 
-        name.setText(ename);
-        date.setText("Date: "+edate);
-        organization.setText("Organized by "+eorg);
-        genre.setText("Genre: "+egen);
+
+            name.setText(ename);
+            date.setText("Date: "+edate);
+            organization.setText("Organized by "+eorg);
+            genre.setText("Genre: "+egen);
+
+            Log.d("Details","Name:"+ename+"\nDate:"+edate+"\norg:"+eorg+"\ngen:"+egen);
+        }
+
     }
 }
