@@ -244,6 +244,10 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
                 dbase.execSQL("CREATE TABLE IF NOT EXISTS users(username VARCHAR, name VARCHAR, password VARCHAR,email_id VARCHAR);");
                 dbase.execSQL("INSERT INTO users VALUES('" + username.getText().toString() + "','" + name.getText().toString() + "','" + password.getText().toString() + "','" + email.getText().toString() + "');");
                 Toast.makeText(this, "User registered successfully", Toast.LENGTH_SHORT).show();
+                SharedPreferences user=getSharedPreferences("curruser",Context.MODE_PRIVATE);
+                SharedPreferences.Editor edit=user.edit();
+                edit.putString("username",username.getText().toString());
+                edit.commit();
                 Intent i=new Intent(this,nav_drawer.class);
                 startActivity(i);
                 finish();

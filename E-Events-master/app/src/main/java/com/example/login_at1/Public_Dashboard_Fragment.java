@@ -70,7 +70,7 @@ public class Public_Dashboard_Fragment extends Fragment implements RecyclerViewA
 
             database.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20) primary key,event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
 
-            database.execSQL("CREATE TABLE IF NOT EXISTS myEvent(username VARCHAR(20),position NUMBER);");
+            database.execSQL("CREATE TABLE IF NOT EXISTS myEvent(username VARCHAR(20),position VARCHAR(20), primary key(username,position));");
 
             Cursor c = database.rawQuery("SELECT * FROM event", null);
 
