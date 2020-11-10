@@ -11,12 +11,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class eventDetails extends AppCompatActivity  implements View.OnClickListener {
 
-    TextView name,date,organization,genre;
+    TextView name,date,organization,genre,time;
     Button register;
-    String num,uname,ename="",edate="",eorg="",egen="";
+    String num,uname,ename="",edate="",etime="",eorg="",egen="";
     SQLiteDatabase db;
 
     @Override
@@ -29,6 +30,7 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
 
         name=(TextView)findViewById(R.id.eventName);
         date=(TextView)findViewById(R.id.eventDate);
+        time = findViewById(R.id.eventTime);
         organization=(TextView)findViewById(R.id.eventOrganizer);
         genre=(TextView)findViewById(R.id.eventGenre);
         register=(Button)findViewById(R.id.reg);
@@ -39,7 +41,7 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
 
         if(db!= null)
         {
-            Cursor c = db.rawQuery("SELECT eventNo,event,organization,genre,eventDate FROM event WHERE eventNo='"+num.toString()+"';", null);
+            Cursor c = db.rawQuery("SELECT eventNo,event_name,organization,genre,eventDate,eventTime FROM event WHERE eventNo='"+num.toString()+"';", null);
 
             if(c.moveToFirst())
             {
@@ -47,11 +49,13 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
                 edate=c.getString(4);
                 eorg=c.getString(2);
                 egen=c.getString(3);
+                etime=c.getString(5);
             }
 
 
             name.setText(ename);
             date.setText("Date: "+edate);
+            time.setText("Start Time: " + etime);
             organization.setText("Organized by "+eorg);
             genre.setText("Genre: "+egen);
 
@@ -70,7 +74,7 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
 
 
 
-            Log.d("Details","Name:"+ename+"\nDate:"+edate+"\norg:"+eorg+"\ngen:"+egen);
+            Log.d("Details","Name:"+ename+"\nDate:"+edate+ "\nTime:" +etime + "\norg:"+eorg+"\ngen:"+egen);
         }
 
     }
@@ -84,12 +88,14 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
             if(c1.moveToFirst())
             {
                 db.execSQL("DELETE FROM myEvent where position='"+num+"' and username='"+uname+"';");
+                Toast.makeText(eventDetails.this, "You are no longer registered to this event", Toast.LENGTH_SHORT).show();
                 register.setText("Register");
             }
         }
         else if(register.getText().toString().equals("Register"))
         {
             db.execSQL("INSERT INTO myEvent VALUES ('"+uname+"','"+num+"');");
+            Toast.makeText(eventDetails.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
             register.setText("Un-Register");
         }
     }

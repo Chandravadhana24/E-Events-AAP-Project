@@ -5,12 +5,13 @@
     <string name="username">Username</string>
     <string name="evento">EVENTO</string>
     <string-array name="Genre">
+        <item>Coding</item>
         <item>Dance</item>
         <item>Mime</item>
         <item>Debate</item>
         <item>Singing</item>
         <item>Drawing</item>
-        <item>Music Band</item>
+        <item>Music</item>
     </string-array>
     <string-array name="Choose_photo_from">
         <item>Gallery</item>

@@ -39,7 +39,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.event_title.setText(allEvents_list.get(position).getNo()+". "+allEvents_list.get(position).getName());
         holder.org_name.setText(allEvents_list.get(position).getOrganisation());
         holder.genre.setText(allEvents_list.get(position).getType());
-        holder.date.setText(allEvents_list.get(position).getStart_date().toString());
+        holder.date.setText(allEvents_list.get(position).getStart_date());
+        holder.time.setText(allEvents_list.get(position).getStart_time());
         //holder.poster.setImageBitmap(allEvents_list.get(position).getPoster());
 
     }
@@ -54,7 +55,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class myViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        TextView event_title,org_name,genre,date;
+        TextView event_title,org_name,genre,date,time;
         RecyclerViewClickListener recyclerViewClickListener;
         //ImageView poster;
         public myViewHolder(@NonNull View itemView, RecyclerViewClickListener recyclerViewClickListener) {
@@ -64,6 +65,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             org_name = itemView.findViewById(R.id.org_name_textView);
             genre = itemView.findViewById(R.id.genre_textView);
             date = itemView.findViewById(R.id.date_textView);
+            time = itemView.findViewById(R.id.time_textView);
             this.recyclerViewClickListener=recyclerViewClickListener;
             //poster = itemView.findViewById(R.id.poster_image_view);
             itemView.setOnClickListener(this);

@@ -43,6 +43,16 @@
                 android:textStyle="italic|bold" />
 
             <TextView
+                android:id="@+id/genre_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Genre"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="16dp" />
+
+            <TextView
                 android:id="@+id/date_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,11 +63,11 @@
                 android:textSize="16dp" />
 
             <TextView
-                android:id="@+id/genre_textView"
+                android:id="@+id/time_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Genre"
+                android:text="Time"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="16dp" />

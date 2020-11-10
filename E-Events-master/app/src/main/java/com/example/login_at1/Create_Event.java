@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -40,7 +42,7 @@ import java.sql.Time;
 import java.util.Calendar;
 
 public class Create_Event extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    EditText event_name, organisation_name,date_editText,venue_editText;
+    EditText event_name, organisation_name,date_editText,time_editText,venue_editText;
     Button create;
     ImageButton poster_imageButton;
     Spinner genre_spinner;
@@ -62,6 +64,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         poster_imageButton = findViewById(R.id.poster_image);
         create = findViewById(R.id.createEvent_Button);
         date_editText = findViewById(R.id.date_editText);
+        time_editText = findViewById(R.id.time_editText);
         venue_editText = findViewById(R.id.venue_editText);
 
         SharedPreferences userN=getSharedPreferences("EventNo", Context.MODE_PRIVATE);
@@ -72,7 +75,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         no= Integer.parseInt(p);
 
         db=openOrCreateDatabase("Events",MODE_PRIVATE,null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20),event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20),event_name VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),eventTime VARCHAR(20),image_byteArr BLOB);");
 
         date_editText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +94,29 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(Create_Event.this,myDatePickerListener,year,month,day);
                 datePickerDialog.show();
+            }
+        });
+
+        time_editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int mHour,mMin;
+                final Calendar c = Calendar.getInstance();
+                mHour = c.get(Calendar.HOUR_OF_DAY);
+                mMin = c.get(Calendar.MINUTE);
+                TimePickerDialog.OnTimeSetListener myTimePickerListener = new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                        if(i>12)
+                            time_editText.setText(i-12 + ":" + i1 +"pm");
+                        else
+                            time_editText.setText(i + ":" + i1 + "am");
+                    }
+                };
+                TimePickerDialog timePickerDialog = new TimePickerDialog(Create_Event.this,myTimePickerListener,mHour,mMin,false);
+                timePickerDialog.show();
+
+
             }
         });
         venue_editText.setOnClickListener(new View.OnClickListener() {
@@ -166,10 +192,10 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 flag=1;
                 Log.d("Create_Btn",date_editText.getText().toString());
-                if((event_name.getText().toString().length()!=0)&&(organisation_name.getText().toString().length()!=0)&&(date_editText.getText().toString().length()!=0))
+                if((event_name.getText().toString().length()!=0)&&(organisation_name.getText().toString().length()!=0)&&(date_editText.getText().toString().length()!=0)&&(time_editText.getText().toString().length()!=0))
                 {
                     create.setEnabled(true);
-                    create.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
+                    create.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
                     create.setTextColor(getResources().getColor(android.R.color.white));
                 }
 
@@ -184,17 +210,22 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         event_name.addTextChangedListener(myTextWatcher);
         organisation_name.addTextChangedListener(myTextWatcher);
         date_editText.addTextChangedListener(myTextWatcher);
+        time_editText.addTextChangedListener(myTextWatcher);
 
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 no++;
-                db.execSQL("INSERT INTO event VALUES('"+ no + "','"+event_name.getText().toString()+"','"+organisation_name.getText().toString()+"','"+whichGenre+"','"+date_editText.getText().toString() + "','" + image_byteArray +"');");
+                db.execSQL("INSERT INTO event VALUES('"+ no + "'," +
+                        "'"+event_name.getText().toString()+"'," +
+                        "'"+organisation_name.getText().toString()+"'," +
+                        "'"+whichGenre+"'," +
+                        "'"+date_editText.getText().toString() + "'," +
+                        "'" + time_editText.getText().toString() + "'," +
+                        "'" + image_byteArray +"');");
 
-                Toast.makeText(Create_Event.this,"Data entered",Toast.LENGTH_SHORT ).show();
-
-                Intent i = new Intent();
+                Toast.makeText(Create_Event.this,"Event created",Toast.LENGTH_SHORT ).show();
                 Intent myIntent = new Intent(Create_Event.this,nav_drawer.class);
 
                 startActivity(myIntent);

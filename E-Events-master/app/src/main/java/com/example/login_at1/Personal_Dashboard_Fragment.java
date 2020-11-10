@@ -59,7 +59,7 @@ public class Personal_Dashboard_Fragment extends Fragment implements RecyclerVie
 
             // database.execSQL("CREATE TABLE IF NOT EXISTS event(event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
 
-            database.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20) primary key,event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
+            database.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20) primary key,event_name VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),eventTime VARCHAR(20),image_byteArr BLOB);");
 
             database.execSQL("CREATE TABLE IF NOT EXISTS myEvent(username VARCHAR(20),position VARCHAR(20), primary key(username,position));");
 
@@ -77,7 +77,7 @@ public class Personal_Dashboard_Fragment extends Fragment implements RecyclerVie
 
                     if(c1.moveToFirst())
                     {
-                        list_of_Events.add(new Event(c1.getString(0), c1.getString(1), c1.getString(2), c1.getString(3), c1.getString(4)));
+                        list_of_Events.add(new Event(c1.getString(0), c1.getString(1), c1.getString(2), c1.getString(3), c1.getString(4),c1.getString(5)));
                     }
 
 
@@ -86,7 +86,7 @@ public class Personal_Dashboard_Fragment extends Fragment implements RecyclerVie
                         c1= database.rawQuery("SELECT * FROM event WHERE eventNo='"+c.getString(1)+"';",null);
                         if(c1.moveToFirst())
                         {
-                            list_of_Events.add(new Event(c1.getString(0), c1.getString(1), c1.getString(2), c1.getString(3), c1.getString(4)));
+                            list_of_Events.add(new Event(c1.getString(0), c1.getString(1), c1.getString(2), c1.getString(3), c1.getString(4),c1.getString(5)));
                         }
 
                     }
