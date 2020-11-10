@@ -95,6 +95,7 @@ public class MainActivity extends Activity  {
                             Intent i = new Intent(MainActivity.this, nav_drawer.class);
                             //i.putExtra("username", editTextentername.getText().toString());
                             startActivity(i);
+                            finish();
 
                         } else {
                             Toast.makeText(MainActivity.this, "Wrong Credentials", Toast.LENGTH_SHORT).show();

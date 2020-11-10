@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -47,7 +49,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
     SQLiteDatabase db;
     String whichGenre;
     private static final int CAMERA_REQUEST = 123;
-    static int no=0;
+    static int no;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,13 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         create = findViewById(R.id.createEvent_Button);
         date_editText = findViewById(R.id.date_editText);
         venue_editText = findViewById(R.id.venue_editText);
+
+        SharedPreferences userN=getSharedPreferences("EventNo", Context.MODE_PRIVATE);
+        String p=userN.getString("number","0");
+
+        Log.d("size","Preference size:"+p);
+
+        no= Integer.parseInt(p);
 
         db=openOrCreateDatabase("Events",MODE_PRIVATE,null);
         db.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20),event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");

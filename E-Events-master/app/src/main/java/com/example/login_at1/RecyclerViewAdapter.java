@@ -31,7 +31,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         View v;
         LayoutInflater inflater = LayoutInflater.from(mContext);
         v = inflater.inflate(R.layout.card_view_item_layout,parent,false);
-        return new myViewHolder(v);
+        return new myViewHolder(v,listener);
     }
 
     @Override
@@ -50,26 +50,30 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public interface RecyclerViewClickListener{
-        void onClick(View v, int position);
+        void onClick(int position);
     }
 
     public class myViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView event_title,org_name,genre,date;
+        RecyclerViewClickListener recyclerViewClickListener;
         //ImageView poster;
-        public myViewHolder(@NonNull View itemView) {
+        public myViewHolder(@NonNull View itemView, RecyclerViewClickListener recyclerViewClickListener) {
             super(itemView);
 
             event_title = itemView.findViewById(R.id.event_name_textView);
             org_name = itemView.findViewById(R.id.org_name_textView);
             genre = itemView.findViewById(R.id.genre_textView);
             date = itemView.findViewById(R.id.date_textView);
+            this.recyclerViewClickListener=recyclerViewClickListener;
             //poster = itemView.findViewById(R.id.poster_image_view);
             itemView.setOnClickListener(this);
+
         }
 
         @Override
         public void onClick(View view) {
-            listener.onClick(view,getAdapterPosition());
+            recyclerViewClickListener.onClick(getAdapterPosition());
+
         }
     }
 }
