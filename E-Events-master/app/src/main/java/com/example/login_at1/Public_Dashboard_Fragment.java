@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.DocumentsContract;
 
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,8 +52,7 @@ public class Public_Dashboard_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_public__dashboard_, container, false);
-
-
+        public_dash_layout = v.findViewById(R.id.public_dashboard_layout);
         list_of_Events = new ArrayList<>();
 
         database = getActivity().getApplicationContext().openOrCreateDatabase("Events", Context.MODE_PRIVATE, null);
@@ -68,10 +68,10 @@ public class Public_Dashboard_Fragment extends Fragment {
             database.execSQL("CREATE TABLE IF NOT EXISTS myEvent(username VARCHAR(20),position NUMBER);");
 
             Cursor c = database.rawQuery("SELECT * FROM event", null);
-            database.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20),event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
+            //database.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20),event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
 
-            if (database != null) {
-                //Toast.makeText(getActivity().getApplicationContext(), "DB is there", Toast.LENGTH_SHORT).show();
+
+
                 if (c.moveToFirst()) {
                     if (c.getCount() == 0) {
                         Toast.makeText(getContext(), "No Record Found", Toast.LENGTH_SHORT).show();
@@ -97,11 +97,11 @@ public class Public_Dashboard_Fragment extends Fragment {
                     myRV.setAdapter(adapter);
                     setOnClickListener();
                 }
-            } else {
+            else {
                 TextView noEvents_textview = new TextView(getActivity());
                 noEvents_textview.setText("No Events");
                 noEvents_textview.setTextColor(getResources().getColor(android.R.color.white));
-                noEvents_textview.setTextSize(Float.parseFloat("22dp"));
+                noEvents_textview.setTextSize(TypedValue.COMPLEX_UNIT_DIP,22);
                 public_dash_layout.setGravity(Gravity.CENTER);
                 public_dash_layout.addView(noEvents_textview);
             }

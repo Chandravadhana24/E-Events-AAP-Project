@@ -17,6 +17,7 @@ public class my_event_frag extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
-        return inflater.inflate(R.layout.fragment_my_event_frag, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_event_frag, container, false);
+        return view;
     }
 }

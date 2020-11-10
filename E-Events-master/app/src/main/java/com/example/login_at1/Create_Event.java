@@ -181,7 +181,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View view) {
 
                 no++;
-                db.execSQL("INSERT INTO event VALUES('"+Integer.toString(no) + "','"+event_name.getText().toString()+"','"+organisation_name.getText().toString()+"','"+whichGenre+"','"+date_editText.getText().toString() + "','" + image_byteArray +"');");
+                db.execSQL("INSERT INTO event VALUES('"+ no + "','"+event_name.getText().toString()+"','"+organisation_name.getText().toString()+"','"+whichGenre+"','"+date_editText.getText().toString() + "','" + image_byteArray +"');");
 
                 Toast.makeText(Create_Event.this,"Data entered",Toast.LENGTH_SHORT ).show();
 
