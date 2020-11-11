@@ -1,9 +1,21 @@
 package com.example.login_at1;
 
+import android.content.Context;
 
-import androidx.annotation.NonNull;
+import android.location.Address;
+import android.location.Geocoder;
+
+import android.os.Bundle;
+
+import android.util.Log;
+import android.widget.EditText;
+
+
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+
+
+import java.io.IOException;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -25,7 +37,6 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -50,6 +61,8 @@ import java.nio.ByteBuffer;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -285,7 +298,10 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
             if (resultCode == RESULT_OK) {
 
                 LatLng latLng = (LatLng) data.getParcelableExtra("picked_point");
-                venue_editText.setText((float) latLng.latitude +" "+ (float)latLng.longitude);
+//hi;
+                getAddress(getApplicationContext(),latLng.latitude,latLng.longitude);
+
+               // venue_editText.setText((float) latLng.latitude +" "+ (float)latLng.longitude);
                 //Toast.makeText(this, "Point Chosen: " + latLng.latitude + " " + latLng.longitude, Toast.LENGTH_LONG).show();
             }
         }
@@ -331,6 +347,43 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    public void getAddress(Context context, double LATITUDE, double LONGITUDE) {
+
+//Set Address
+        try {
+            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null && addresses.size() > 0) {
+
+
+
+                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                String city = addresses.get(0).getLocality();
+                String state = addresses.get(0).getAdminArea();
+                String country = addresses.get(0).getCountryName();
+                String postalCode = addresses.get(0).getPostalCode();
+                String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+
+                venue_editText.setText(address+ " "+city+ " "+state+ " "+postalCode+" "+knownName);
+
+
+                //txt1.setText(address);
+                //txt2.setText(city);
+                //txt3.setText(state);
+                //txt4.setText(postalCode);
+                // Log.d("getAddress:  address" + address);
+                //Log.d(TAG, "getAddress:  city" + city);
+                //Log.d(TAG, "getAddress:  state" + state);
+                //Log.d(TAG, "getAddress:  postalCode" + postalCode);
+                //Log.d(TAG, "getAddress:  knownName" + knownName);
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return;
+    }
 
 
 }

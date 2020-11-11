@@ -31,6 +31,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        LatLng amrita = new LatLng(10.9027, 76.9006);
+        mMap.addMarker(new MarkerOptions().position(amrita).title("Marker at Amrita Coimbatore"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(amrita, 18));
+        //mMap.animateCamera(CameraUpdateFactory.zoomTo(20), 2000, null);
+
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
