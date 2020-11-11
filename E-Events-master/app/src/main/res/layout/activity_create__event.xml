@@ -111,7 +111,7 @@
                 android:inputType="text"
                 android:textColorHint="@android:color/holo_orange_dark" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/poster_image"
                 android:layout_width="fill_parent"
                 android:layout_height="365dp"
