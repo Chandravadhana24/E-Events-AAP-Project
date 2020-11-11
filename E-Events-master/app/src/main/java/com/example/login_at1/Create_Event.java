@@ -1,8 +1,11 @@
 package com.example.login_at1;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -10,8 +13,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,6 +36,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -39,20 +46,29 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.Calendar;
 
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+
+import com.google.android.gms.maps.model.LatLng;
+
 public class Create_Event extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     EditText event_name, organisation_name,date_editText,venue_editText;
     Button create;
-    ImageButton poster_imageButton;
+    ImageButton poster_imageButton, venue_imagebutton;
     Spinner genre_spinner;
     int flag;
     byte[] image_byteArray;
     SQLiteDatabase db;
     String whichGenre;
+    LocationManager locationManager;
     private static final int CAMERA_REQUEST = 123;
     static int no;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create__event);
 
@@ -63,6 +79,8 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         create = findViewById(R.id.createEvent_Button);
         date_editText = findViewById(R.id.date_editText);
         venue_editText = findViewById(R.id.venue_editText);
+        venue_imagebutton=findViewById(R.id.venue_imagebutton);
+
 
         SharedPreferences userN=getSharedPreferences("EventNo", Context.MODE_PRIVATE);
         String p=userN.getString("number","0");
@@ -93,32 +111,17 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
                 datePickerDialog.show();
             }
         });
-        venue_editText.setOnClickListener(new View.OnClickListener() {
+        //----------------------------------------------------------------------
+
+        venue_imagebutton = (ImageButton)findViewById(R.id.venue_imagebutton);
+        venue_imagebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(Create_Event.this,view);
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        //if(menuItem.getItemId()==R.id.item1_locate)
-                       // {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(Create_Event.this);
-                            EditText inputLocation = new EditText(Create_Event.this);
-                            builder.setView(inputLocation);
-                            builder.show();
-
-                            String location_url = inputLocation.getText().toString();
-                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(location_url));
-                            //startActivity(mapIntent);
-                       // }
-                        return true;
-                    }
-                });
-                popupMenu.inflate(R.menu.popup_menu_for_venue);
-                popupMenu.show();
-                //Intent mapIntent = new Intent(Intent.ACTION_VIEW,"geo")
+                pickPointOnMap();
             }
         });
+
+        //------------------------------------------------------
         ArrayAdapter<CharSequence> genreAdapter = ArrayAdapter.createFromResource(this, R.array.Genre, android.R.layout.simple_spinner_item);
         genreAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genre_spinner.setAdapter(genreAdapter);
@@ -203,6 +206,15 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         });
     }
 
+    //venuelocation
+    static final int PICK_MAP_POINT_REQUEST = 999;  // The request code
+    private void pickPointOnMap() {
+        Intent pickPointIntent = new Intent(this, MapsActivity.class);
+        startActivityForResult(pickPointIntent, PICK_MAP_POINT_REQUEST);
+    }
+
+
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         whichGenre = adapterView.getItemAtPosition(i).toString();
@@ -215,6 +227,16 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_MAP_POINT_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+
+                LatLng latLng = (LatLng) data.getParcelableExtra("picked_point");
+                venue_editText.setText((float) latLng.latitude +" "+ (float)latLng.longitude);
+                //Toast.makeText(this, "Point Chosen: " + latLng.latitude + " " + latLng.longitude, Toast.LENGTH_LONG).show();
+            }
+        }
 
         if (requestCode == 24 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
@@ -249,6 +271,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
             Log.d("Create_Event",Boolean.toString(image_byteArray==null));
         }
     }
+
 
 
 }
