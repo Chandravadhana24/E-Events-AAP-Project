@@ -1,8 +1,23 @@
 package com.example.login_at1;
 
+import android.content.Context;
+
+import android.location.Address;
+import android.location.Geocoder;
+
+import android.os.Bundle;
+
+import android.util.Log;
+import android.widget.EditText;
+
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import java.io.IOException;
+
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -11,15 +26,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -31,7 +48,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
+
+import android.widget.TextView;
+
 import android.widget.TimePicker;
+
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -40,16 +61,31 @@ import java.nio.ByteBuffer;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+
+import com.google.android.gms.maps.model.LatLng;
 
 public class Create_Event extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     EditText event_name, organisation_name,date_editText,time_editText,venue_editText;
     Button create;
+
+    ImageButton venue_imagebutton;
     ImageView poster_imageButton;
+
+
+
     Spinner genre_spinner;
     int flag;
     Byte[] image_byteArray;
     SQLiteDatabase db;
     String whichGenre;
+    LocationManager locationManager;
     private static final int CAMERA_REQUEST = 123;
     static int no;
     Uri imageFilePath;
@@ -59,18 +95,21 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create__event);
-
         event_name = findViewById(R.id.event_name);
         organisation_name=findViewById(R.id.org_name);
         genre_spinner = findViewById(R.id.genre_spinner);
-        poster_imageButton = findViewById(R.id.poster_image);
+       poster_imageButton=findViewById(R.id.poster_image);
         create = findViewById(R.id.createEvent_Button);
         date_editText = findViewById(R.id.date_editText);
         time_editText = findViewById(R.id.time_editText);
         venue_editText = findViewById(R.id.venue_editText);
+        venue_imagebutton=findViewById(R.id.venue_imagebutton);
+
+
         objectDatabaseHandler=new DatabaseHandlaer(this);
 
         SharedPreferences userN=getSharedPreferences("EventNo", Context.MODE_PRIVATE);
@@ -107,6 +146,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
+
         time_editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,32 +169,19 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
 
             }
         });
-        venue_editText.setOnClickListener(new View.OnClickListener() {
+        venue_imagebutton = (ImageButton)findViewById(R.id.venue_imagebutton);
+
+
+
+
+            venue_imagebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(Create_Event.this,view);
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        //if(menuItem.getItemId()==R.id.item1_locate)
-                       // {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(Create_Event.this);
-                            EditText inputLocation = new EditText(Create_Event.this);
-                            builder.setView(inputLocation);
-                            builder.show();
-
-                            String location_url = inputLocation.getText().toString();
-                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(location_url));
-                            //startActivity(mapIntent);
-                       // }
-                        return true;
-                    }
-                });
-                popupMenu.inflate(R.menu.popup_menu_for_venue);
-                popupMenu.show();
-                //Intent mapIntent = new Intent(Intent.ACTION_VIEW,"geo")
+                pickPointOnMap();
             }
         });
+
+        //------------------------------------------------------
         ArrayAdapter<CharSequence> genreAdapter = ArrayAdapter.createFromResource(this, R.array.Genre, android.R.layout.simple_spinner_item);
         genreAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genre_spinner.setAdapter(genreAdapter);
@@ -249,6 +276,15 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         });
     }
 
+    //venuelocation
+    static final int PICK_MAP_POINT_REQUEST = 999;  // The request code
+    private void pickPointOnMap() {
+        Intent pickPointIntent = new Intent(this, MapsActivity.class);
+        startActivityForResult(pickPointIntent, PICK_MAP_POINT_REQUEST);
+    }
+
+
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         whichGenre = adapterView.getItemAtPosition(i).toString();
@@ -261,6 +297,19 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_MAP_POINT_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+
+                LatLng latLng = (LatLng) data.getParcelableExtra("picked_point");
+//hi;
+                getAddress(getApplicationContext(),latLng.latitude,latLng.longitude);
+
+               // venue_editText.setText((float) latLng.latitude +" "+ (float)latLng.longitude);
+                //Toast.makeText(this, "Point Chosen: " + latLng.latitude + " " + latLng.longitude, Toast.LENGTH_LONG).show();
+            }
+        }
 
         if (requestCode == 24 && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
@@ -283,6 +332,44 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
+
+    public void getAddress(Context context, double LATITUDE, double LONGITUDE) {
+
+//Set Address
+        try {
+            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null && addresses.size() > 0) {
+
+
+
+                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                String city = addresses.get(0).getLocality();
+                String state = addresses.get(0).getAdminArea();
+                String country = addresses.get(0).getCountryName();
+                String postalCode = addresses.get(0).getPostalCode();
+                String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+
+                venue_editText.setText(address+ " "+city+ " "+state+ " "+postalCode+" "+knownName);
+
+
+                //txt1.setText(address);
+                //txt2.setText(city);
+                //txt3.setText(state);
+                //txt4.setText(postalCode);
+                // Log.d("getAddress:  address" + address);
+                //Log.d(TAG, "getAddress:  city" + city);
+                //Log.d(TAG, "getAddress:  state" + state);
+                //Log.d(TAG, "getAddress:  postalCode" + postalCode);
+                //Log.d(TAG, "getAddress:  knownName" + knownName);
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return;
+    }
 
 
 }

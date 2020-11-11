@@ -11,10 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login"
-        android:textStyle="italic"
+        android:textStyle="italic|bold"
+        android:textColor="#111"
         android:gravity="center_horizontal"
-        android:background="#FF9800"
-        android:textColor="#494040"
+        android:background="@android:color/holo_orange_dark"
         android:textSize="35dp"
         />
 
@@ -22,10 +22,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="EVENTO"
-        android:textStyle="italic"
-        android:background="#FF9800"
+        android:textStyle="italic|bold"
+        android:textColor="#111"
+        android:background="@android:color/holo_orange_dark"
         android:gravity="center_horizontal"
-        android:textColor="#494040"
         android:textSize="35dp"
         />
 
@@ -45,6 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+
         android:layout_marginTop="0dp">
 
         <ImageButton
@@ -78,9 +79,9 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="70dp"
         android:ems="10"
+        android:textColor="#111"
         android:focusable="true"
         android:hint="Enter Username"
-        android:textColor="#494040"
         android:textColorHighlight="#ff7eff15"
         android:textColorHint="#494040"
         android:background="#11000000"
@@ -97,7 +98,7 @@
         android:ems="10"
         android:layout_centerHorizontal="true"
         android:hint="Password"
-        android:textColor="#494040"
+        android:textColor="#111"
         android:textColorHighlight="#ff7eff15"
         android:textColorHint="#494040"
         android:background="#11000000"
@@ -110,6 +111,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:textColor="#111"
         android:orientation="horizontal">
 
         <TextView
@@ -118,7 +120,8 @@
             android:text="Attempts Left:"
             android:layout_marginLeft="30dp"
             android:textSize="15dp"
-            android:textColor="#494040"/>
+            android:textColor="#111"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -126,8 +129,9 @@
             android:text="3"
             android:id="@+id/textViewattemptsleft"
             android:textSize="20dp"
+            android:textColor="#111"
             android:layout_marginLeft="150dp"
-            android:textColor="#f8efd4">
+            >
 
         </TextView>
 
@@ -142,8 +146,8 @@
         android:text="Login"
         android:id="@+id/buttonlogin"
         android:gravity="center_horizontal"
-        android:background="#FF9800"
-        android:textColor="#494040"
+        android:background="@android:color/holo_orange_dark"
+        android:textColor="#111"
         android:textSize="35dp"
         />
     <TextView
@@ -151,7 +155,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="90dp"
-        android:textColor="#494040"
+        android:textColor="#111"
         android:textSize="15dp"
         android:text="Sign up if you don't have an account"/>
 
@@ -166,9 +170,8 @@
             android:layout_height="wrap_content"
             android:text="Sign Up"
             android:gravity="center_horizontal"
-            android:background="#FF9800"
-            android:id="@+id/buttonsignup"
-            android:textColor="#494040"
+            android:textColor="#111"
+            android:background="@android:color/holo_orange_dark"            android:id="@+id/buttonsignup"
             android:textSize="25dp"
             android:layout_marginLeft="40dp"/>
 
@@ -176,10 +179,9 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="Cancel"
+            android:textColor="#111"
             android:gravity="center_horizontal"
-            android:background="#FF9800"
-            android:id="@+id/buttoncancel"
-            android:textColor="#494040"
+            android:background="@android:color/holo_orange_dark"            android:id="@+id/buttoncancel"
             android:textSize="25dp"
             android:layout_marginLeft="40dp"/>
 
