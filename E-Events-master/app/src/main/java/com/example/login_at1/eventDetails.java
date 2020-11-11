@@ -7,20 +7,29 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class eventDetails extends AppCompatActivity  implements View.OnClickListener {
 
     TextView name,date,organization,genre,time;
+    ImageView img;
     Button register;
     String num,uname,ename="",edate="",etime="",eorg="",egen="";
     SQLiteDatabase db;
     private NotificationHelper mNotificationHelper;
+    DatabaseHandlaer objectDatabaseHandler;
+    int no;
+    ArrayList<modelClass> posters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -30,6 +39,13 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
         SharedPreferences userN=getSharedPreferences("curruser", Context.MODE_PRIVATE);
         uname = userN.getString("username","NA");
 
+        objectDatabaseHandler=new DatabaseHandlaer(this);
+        posters=new ArrayList<>();
+        posters=objectDatabaseHandler.getAllImageData();
+
+
+
+        img=findViewById(R.id.poster);
         name=(TextView)findViewById(R.id.eventName);
         date=(TextView)findViewById(R.id.eventDate);
         time = findViewById(R.id.eventTime);
@@ -43,12 +59,15 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
         Log.d("pos","clicked position:"+num);
         db=openOrCreateDatabase("Events", Context.MODE_PRIVATE, null);
 
+        no=Integer.parseInt(num);
+
         if(db!= null)
         {
             Cursor c = db.rawQuery("SELECT eventNo,event_name,organization,genre,eventDate,eventTime FROM event WHERE eventNo='"+num.toString()+"';", null);
 
             if(c.moveToFirst())
             {
+                img.setImageBitmap(posters.get(no-1).getImage());
                 ename=c.getString(1);
                 edate=c.getString(4);
                 eorg=c.getString(2);

@@ -50,6 +50,8 @@ public class Public_Dashboard_Fragment extends Fragment implements RecyclerViewA
     RecyclerView myRV;
     RecyclerViewAdapter.RecyclerViewClickListener listener;
     final int MYREQUEST = 11;
+    DatabaseHandlaer objectDatabaseHandler;
+    ArrayList<modelClass> posters;
 
 
 
@@ -60,7 +62,9 @@ public class Public_Dashboard_Fragment extends Fragment implements RecyclerViewA
         View v = inflater.inflate(R.layout.fragment_public__dashboard_, container, false);
         public_dash_layout = v.findViewById(R.id.public_dashboard_layout);
         list_of_Events = new ArrayList<>();
-
+        objectDatabaseHandler=new DatabaseHandlaer(getContext());
+        posters=new ArrayList<>();
+        posters=objectDatabaseHandler.getAllImageData();
         database = getActivity().getApplicationContext().openOrCreateDatabase("Events", Context.MODE_PRIVATE, null);
 
 
@@ -75,8 +79,7 @@ public class Public_Dashboard_Fragment extends Fragment implements RecyclerViewA
                     "organization VARCHAR(20)," +
                     "genre VARCHAR(20)," +
                     "eventDate VARCHAR(20)," +
-                    "eventTime VARCHAR(20)," +
-                    "image_byteArr BLOB);");
+                    "eventTime VARCHAR(20));" );
 
             database.execSQL("CREATE TABLE IF NOT EXISTS myEvent(username VARCHAR(20),position VARCHAR(20), primary key(username,position));");
 
@@ -108,7 +111,7 @@ public class Public_Dashboard_Fragment extends Fragment implements RecyclerViewA
                     edit.commit();
 
                     myRV = v.findViewById(R.id.recycler_view);
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(), list_of_Events, this);
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(), posters,list_of_Events, this);
                     myRV.setLayoutManager(new GridLayoutManager(getActivity(), 1));
                     myRV.setLayoutManager(new GridLayoutManager(getActivity(), 1));
                     myRV.setAdapter(adapter);

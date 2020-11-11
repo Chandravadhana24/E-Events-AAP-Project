@@ -39,6 +39,9 @@ public class Personal_Dashboard_Fragment extends Fragment implements RecyclerVie
     RecyclerViewAdapter.RecyclerViewClickListener listener;
     final int MYREQUEST = 11;
     String uname;
+    DatabaseHandlaer objectDatabaseHandler;
+    ArrayList<modelClass> posters;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,6 +50,9 @@ public class Personal_Dashboard_Fragment extends Fragment implements RecyclerVie
         View v = inflater.inflate(R.layout.fragment_personal__dashboard_, container, false);
 
         list_of_Events = new ArrayList<>();
+        objectDatabaseHandler=new DatabaseHandlaer(getContext());
+        posters=new ArrayList<>();
+        posters=objectDatabaseHandler.getAllImageData();
 
         SharedPreferences userN=getActivity().getSharedPreferences("curruser", Context.MODE_PRIVATE);
         uname = userN.getString("username","NA");
@@ -99,7 +105,7 @@ public class Personal_Dashboard_Fragment extends Fragment implements RecyclerVie
                     edit.commit();
 
                     myRV = v.findViewById(R.id.recycler_view);
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(), list_of_Events, this);
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(), posters, list_of_Events, this);
                     myRV.setLayoutManager(new GridLayoutManager(getActivity(), 1));
                     myRV.setLayoutManager(new GridLayoutManager(getActivity(), 1));
                     myRV.setAdapter(adapter);

@@ -44,14 +44,18 @@ import java.util.Calendar;
 public class Create_Event extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     EditText event_name, organisation_name,date_editText,time_editText,venue_editText;
     Button create;
-    ImageButton poster_imageButton;
+    ImageView poster_imageButton;
     Spinner genre_spinner;
     int flag;
-    byte[] image_byteArray;
+    Byte[] image_byteArray;
     SQLiteDatabase db;
     String whichGenre;
     private static final int CAMERA_REQUEST = 123;
     static int no;
+    Uri imageFilePath;
+    Bitmap imageToStore;
+    DatabaseHandlaer objectDatabaseHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         date_editText = findViewById(R.id.date_editText);
         time_editText = findViewById(R.id.time_editText);
         venue_editText = findViewById(R.id.venue_editText);
+        objectDatabaseHandler=new DatabaseHandlaer(this);
 
         SharedPreferences userN=getSharedPreferences("EventNo", Context.MODE_PRIVATE);
         String p=userN.getString("number","0");
@@ -73,9 +78,10 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         Log.d("size","Preference size:"+p);
 
         no= Integer.parseInt(p);
+        no++;
 
         db=openOrCreateDatabase("Events",MODE_PRIVATE,null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20),event_name VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),eventTime VARCHAR(20),image_byteArr BLOB);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20),event_name VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),eventTime VARCHAR(20));");
 
         date_editText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,14 +222,18 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View view) {
 
-                no++;
+                if(poster_imageButton.getDrawable()!=null)
+                {
+                    objectDatabaseHandler.storeImage(new modelClass(Integer.toString(no),imageToStore));
+                    Log.d("pic","inside if");
+                }
+
                 db.execSQL("INSERT INTO event VALUES('"+ no + "'," +
                         "'"+event_name.getText().toString()+"'," +
                         "'"+organisation_name.getText().toString()+"'," +
                         "'"+whichGenre+"'," +
                         "'"+date_editText.getText().toString() + "'," +
-                        "'" + time_editText.getText().toString() + "'," +
-                        "'" + image_byteArray +"');");
+                        "'" + time_editText.getText().toString() + "');");
 
                 Toast.makeText(Create_Event.this,"Event created",Toast.LENGTH_SHORT ).show();
                 Intent myIntent = new Intent(Create_Event.this,nav_drawer.class);
@@ -248,7 +258,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 24 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData();
+            /*Uri imageUri = data.getData();
             ImageView imageView = findViewById(R.id.poster_image);
             imageView.setImageURI(imageUri);
             Bitmap bitmap = null;
@@ -264,21 +274,28 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
             ByteBuffer byteBuffer = ByteBuffer.allocate(size);
             bitmap.copyPixelsToBuffer(byteBuffer);
             image_byteArray = byteBuffer.array();
-            Log.d("IS image arr null",Boolean.toString(image_byteArray==null));
+            Log.d("IS image arr null",Boolean.toString(image_byteArray==null));*/
+
+            imageFilePath= data.getData();
+            try {
+                imageToStore=MediaStore.Images.Media.getBitmap(getContentResolver(),imageFilePath);
+                poster_imageButton.setImageBitmap(imageToStore);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         if (requestCode == 123 && resultCode == RESULT_OK)
         {
-            Bitmap myCamPic = (Bitmap) data.getExtras().get("data");
-            poster_imageButton.setImageBitmap(myCamPic);
-            int width = myCamPic.getWidth();
-            int height = myCamPic.getHeight();
+            imageToStore= (Bitmap) data.getExtras().get("data");
 
-            int size = myCamPic.getRowBytes() * myCamPic.getHeight();
-            ByteBuffer byteBuffer = ByteBuffer.allocate(size);
-            myCamPic.copyPixelsToBuffer(byteBuffer);
-            image_byteArray = byteBuffer.array();
-            Log.d("Create_Event",Boolean.toString(image_byteArray==null));
+            poster_imageButton.setImageBitmap(imageToStore);
+
         }
+    }
+
+    public void storeImage(View view)
+    {
+
     }
 
 
