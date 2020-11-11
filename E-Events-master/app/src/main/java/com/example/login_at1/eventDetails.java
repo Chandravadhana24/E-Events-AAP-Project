@@ -1,6 +1,7 @@
 package com.example.login_at1;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,6 +20,7 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
     Button register;
     String num,uname,ename="",edate="",etime="",eorg="",egen="";
     SQLiteDatabase db;
+    private NotificationHelper mNotificationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -34,6 +36,8 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
         organization=(TextView)findViewById(R.id.eventOrganizer);
         genre=(TextView)findViewById(R.id.eventGenre);
         register=(Button)findViewById(R.id.reg);
+        mNotificationHelper = new NotificationHelper(eventDetails.this);
+
         Bundle b=getIntent().getExtras();
         num=b.getString("position");
         Log.d("pos","clicked position:"+num);
@@ -97,6 +101,13 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
             db.execSQL("INSERT INTO myEvent VALUES ('"+uname+"','"+num+"');");
             Toast.makeText(eventDetails.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
             register.setText("Un-Register");
+            sendNotif_onChannel("E-Events","Registered Successfully for " + ename);
         }
+    }
+
+    public void sendNotif_onChannel(String title,String msg)
+    {
+        NotificationCompat.Builder mBuilder = mNotificationHelper.getChannelNotif(title,msg);
+        mNotificationHelper.getManager().notify(1,mBuilder.build());
     }
 }
