@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.DocumentsContract;
 
+
+import android.util.TypedValue;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -48,6 +50,8 @@ public class Public_Dashboard_Fragment extends Fragment implements RecyclerViewA
     RecyclerView myRV;
     RecyclerViewAdapter.RecyclerViewClickListener listener;
     final int MYREQUEST = 11;
+    DatabaseHandlaer objectDatabaseHandler;
+    ArrayList<modelClass> posters;
 
 
 
@@ -56,10 +60,11 @@ public class Public_Dashboard_Fragment extends Fragment implements RecyclerViewA
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_public__dashboard_, container, false);
-
-
+        public_dash_layout = v.findViewById(R.id.public_dashboard_layout);
         list_of_Events = new ArrayList<>();
-
+        objectDatabaseHandler=new DatabaseHandlaer(getContext());
+        posters=new ArrayList<>();
+        posters=objectDatabaseHandler.getAllImageData();
         database = getActivity().getApplicationContext().openOrCreateDatabase("Events", Context.MODE_PRIVATE, null);
 
 
@@ -68,14 +73,18 @@ public class Public_Dashboard_Fragment extends Fragment implements RecyclerViewA
 
             // database.execSQL("CREATE TABLE IF NOT EXISTS event(event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
 
-            database.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20) primary key,event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
+            database.execSQL("CREATE TABLE IF NOT EXISTS event(" +
+                    "eventNo VARCHAR(20) primary key," +
+                    "event_name VARCHAR(20)," +
+                    "organization VARCHAR(20)," +
+                    "genre VARCHAR(20)," +
+                    "eventDate VARCHAR(20)," +
+                    "eventTime VARCHAR(20));" );
 
             database.execSQL("CREATE TABLE IF NOT EXISTS myEvent(username VARCHAR(20),position VARCHAR(20), primary key(username,position));");
 
             Cursor c = database.rawQuery("SELECT * FROM event", null);
 
-            if (database != null) {
-                //Toast.makeText(getActivity().getApplicationContext(), "DB is there", Toast.LENGTH_SHORT).show();
                 if (c.moveToFirst()) {
                     if (c.getCount() == 0) {
                         Toast.makeText(getContext(), "No Record Found", Toast.LENGTH_SHORT).show();
@@ -84,13 +93,13 @@ public class Public_Dashboard_Fragment extends Fragment implements RecyclerViewA
 
 
 
-                    list_of_Events.add(new Event(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4)));
+                    list_of_Events.add(new Event(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5)));
                     stringBuffer = new StringBuffer();
                     Date date1 = null;
 
                     while (c.moveToNext()) {
                         //Log.d()
-                        list_of_Events.add(new Event(c.getString(0), c.getString(1), c.getString(2), c.getString(3),c.getString(4)));
+                        list_of_Events.add(new Event(c.getString(0), c.getString(1), c.getString(2), c.getString(3),c.getString(4), c.getString(5)));
 
                     }
                     //Toast.makeText(getContext(), stringBuffer, Toast.LENGTH_SHORT).show();
@@ -102,17 +111,17 @@ public class Public_Dashboard_Fragment extends Fragment implements RecyclerViewA
                     edit.commit();
 
                     myRV = v.findViewById(R.id.recycler_view);
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(), list_of_Events, this);
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(getActivity(), posters,list_of_Events, this);
                     myRV.setLayoutManager(new GridLayoutManager(getActivity(), 1));
                     myRV.setLayoutManager(new GridLayoutManager(getActivity(), 1));
                     myRV.setAdapter(adapter);
 
                 }
-            } else {
+            else {
                 TextView noEvents_textview = new TextView(getActivity());
                 noEvents_textview.setText("No Events");
                 noEvents_textview.setTextColor(getResources().getColor(android.R.color.white));
-                noEvents_textview.setTextSize(Float.parseFloat("22dp"));
+                noEvents_textview.setTextSize(TypedValue.COMPLEX_UNIT_DIP,22);
                 public_dash_layout.setGravity(Gravity.CENTER);
                 public_dash_layout.addView(noEvents_textview);
             }

@@ -21,6 +21,7 @@ public class my_event_frag extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+
         View view=inflater.inflate(R.layout.fragment_my_event_frag, container, false);
 
         SharedPreferences userN=getActivity().getSharedPreferences("curruser", Context.MODE_PRIVATE);
@@ -28,7 +29,6 @@ public class my_event_frag extends Fragment {
 
         uname=view.findViewById(R.id.username);
         uname.setText(p);
-
 
         return view;
     }

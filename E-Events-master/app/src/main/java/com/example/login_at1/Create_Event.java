@@ -9,6 +9,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,7 +37,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
+
 import android.widget.TextView;
+
+import android.widget.TimePicker;
+
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -54,33 +59,44 @@ import android.location.LocationManager;
 import com.google.android.gms.maps.model.LatLng;
 
 public class Create_Event extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    EditText event_name, organisation_name,date_editText,venue_editText;
+    EditText event_name, organisation_name,date_editText,time_editText,venue_editText;
     Button create;
-    ImageButton poster_imageButton, venue_imagebutton;
+
+    ImageButton venue_imagebutton;
+    ImageView poster_imageButton;
+
+
+
     Spinner genre_spinner;
     int flag;
-    byte[] image_byteArray;
+    Byte[] image_byteArray;
     SQLiteDatabase db;
     String whichGenre;
     LocationManager locationManager;
     private static final int CAMERA_REQUEST = 123;
     static int no;
+    Uri imageFilePath;
+    Bitmap imageToStore;
+    DatabaseHandlaer objectDatabaseHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create__event);
-
         event_name = findViewById(R.id.event_name);
         organisation_name=findViewById(R.id.org_name);
         genre_spinner = findViewById(R.id.genre_spinner);
-        poster_imageButton = findViewById(R.id.poster_image);
+       poster_imageButton=findViewById(R.id.poster_image);
         create = findViewById(R.id.createEvent_Button);
         date_editText = findViewById(R.id.date_editText);
+        time_editText = findViewById(R.id.time_editText);
         venue_editText = findViewById(R.id.venue_editText);
         venue_imagebutton=findViewById(R.id.venue_imagebutton);
 
+
+        objectDatabaseHandler=new DatabaseHandlaer(this);
 
         SharedPreferences userN=getSharedPreferences("EventNo", Context.MODE_PRIVATE);
         String p=userN.getString("number","0");
@@ -88,9 +104,10 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         Log.d("size","Preference size:"+p);
 
         no= Integer.parseInt(p);
+        no++;
 
         db=openOrCreateDatabase("Events",MODE_PRIVATE,null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20),event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20),event_name VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),eventTime VARCHAR(20));");
 
         date_editText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,10 +128,36 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
                 datePickerDialog.show();
             }
         });
-        //----------------------------------------------------------------------
 
+
+        time_editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int mHour,mMin;
+                final Calendar c = Calendar.getInstance();
+                mHour = c.get(Calendar.HOUR_OF_DAY);
+                mMin = c.get(Calendar.MINUTE);
+                TimePickerDialog.OnTimeSetListener myTimePickerListener = new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                        if(i>12)
+                            time_editText.setText(i-12 + ":" + i1 +"pm");
+                        else
+                            time_editText.setText(i + ":" + i1 + "am");
+                    }
+                };
+                TimePickerDialog timePickerDialog = new TimePickerDialog(Create_Event.this,myTimePickerListener,mHour,mMin,false);
+                timePickerDialog.show();
+
+
+            }
+        });
         venue_imagebutton = (ImageButton)findViewById(R.id.venue_imagebutton);
-        venue_imagebutton.setOnClickListener(new View.OnClickListener() {
+
+
+
+
+            venue_imagebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 pickPointOnMap();
@@ -169,10 +212,10 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 flag=1;
                 Log.d("Create_Btn",date_editText.getText().toString());
-                if((event_name.getText().toString().length()!=0)&&(organisation_name.getText().toString().length()!=0)&&(date_editText.getText().toString().length()!=0))
+                if((event_name.getText().toString().length()!=0)&&(organisation_name.getText().toString().length()!=0)&&(date_editText.getText().toString().length()!=0)&&(time_editText.getText().toString().length()!=0))
                 {
                     create.setEnabled(true);
-                    create.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
+                    create.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
                     create.setTextColor(getResources().getColor(android.R.color.white));
                 }
 
@@ -187,17 +230,26 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         event_name.addTextChangedListener(myTextWatcher);
         organisation_name.addTextChangedListener(myTextWatcher);
         date_editText.addTextChangedListener(myTextWatcher);
+        time_editText.addTextChangedListener(myTextWatcher);
 
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                no++;
-                db.execSQL("INSERT INTO event VALUES('"+Integer.toString(no) + "','"+event_name.getText().toString()+"','"+organisation_name.getText().toString()+"','"+whichGenre+"','"+date_editText.getText().toString() + "','" + image_byteArray +"');");
+                if(poster_imageButton.getDrawable()!=null)
+                {
+                    objectDatabaseHandler.storeImage(new modelClass(Integer.toString(no),imageToStore));
+                    Log.d("pic","inside if");
+                }
 
-                Toast.makeText(Create_Event.this,"Data entered",Toast.LENGTH_SHORT ).show();
+                db.execSQL("INSERT INTO event VALUES('"+ no + "'," +
+                        "'"+event_name.getText().toString()+"'," +
+                        "'"+organisation_name.getText().toString()+"'," +
+                        "'"+whichGenre+"'," +
+                        "'"+date_editText.getText().toString() + "'," +
+                        "'" + time_editText.getText().toString() + "');");
 
-                Intent i = new Intent();
+                Toast.makeText(Create_Event.this,"Event created",Toast.LENGTH_SHORT ).show();
                 Intent myIntent = new Intent(Create_Event.this,nav_drawer.class);
 
                 startActivity(myIntent);
@@ -239,7 +291,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         }
 
         if (requestCode == 24 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData();
+            /*Uri imageUri = data.getData();
             ImageView imageView = findViewById(R.id.poster_image);
             imageView.setImageURI(imageUri);
             Bitmap bitmap = null;
@@ -255,21 +307,28 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
             ByteBuffer byteBuffer = ByteBuffer.allocate(size);
             bitmap.copyPixelsToBuffer(byteBuffer);
             image_byteArray = byteBuffer.array();
-            Log.d("IS image arr null",Boolean.toString(image_byteArray==null));
+            Log.d("IS image arr null",Boolean.toString(image_byteArray==null));*/
+
+            imageFilePath= data.getData();
+            try {
+                imageToStore=MediaStore.Images.Media.getBitmap(getContentResolver(),imageFilePath);
+                poster_imageButton.setImageBitmap(imageToStore);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         if (requestCode == 123 && resultCode == RESULT_OK)
         {
-            Bitmap myCamPic = (Bitmap) data.getExtras().get("data");
-            poster_imageButton.setImageBitmap(myCamPic);
-            int width = myCamPic.getWidth();
-            int height = myCamPic.getHeight();
+            imageToStore= (Bitmap) data.getExtras().get("data");
 
-            int size = myCamPic.getRowBytes() * myCamPic.getHeight();
-            ByteBuffer byteBuffer = ByteBuffer.allocate(size);
-            myCamPic.copyPixelsToBuffer(byteBuffer);
-            image_byteArray = byteBuffer.array();
-            Log.d("Create_Event",Boolean.toString(image_byteArray==null));
+            poster_imageButton.setImageBitmap(imageToStore);
+
         }
+    }
+
+    public void storeImage(View view)
+    {
+
     }
 
 

@@ -6,20 +6,21 @@ import java.sql.Date;
 import java.sql.Time;
 
 public class Event {
-    private String no,name,organisation,type,start_date;
+    private String no,name,organisation,type,start_date,start_time;
     private Bitmap poster;
 
     public Event() {
 
     }
 
-    public Event(String no,String name, String organisation, String type, String start_date){   //Bitmap poster) {
+    public Event(String no,String name, String organisation, String type, String start_date, String start_time){   //Bitmap poster) {
 
         this.no=no;
         this.name = name;
         this.organisation = organisation;
         this.type = type;
         this.start_date = start_date;
+        this.start_time = start_time;
         //this.poster = poster;
     }
 
@@ -62,6 +63,10 @@ public class Event {
     public void setStart_date(String start_date) {
         this.start_date = start_date;
     }
+
+    public String getStart_time() { return start_time; }
+
+    public void setStart_time(String start_time) { this.start_time = start_time; }
 
     public Bitmap getPoster() {
         return poster;

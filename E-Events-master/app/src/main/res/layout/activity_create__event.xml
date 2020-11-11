@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_orange_light"
+    android:background="@android:color/holo_orange_dark"
     android:orientation="vertical"
     android:padding="10dp"
     tools:context=".Create_Event">
@@ -27,7 +27,7 @@
                 android:layout_marginLeft="5dp"
                 android:hint="Event Name"
                 android:inputType="text"
-                android:textColorHint="@android:color/holo_orange_light"
+                android:textColorHint="@android:color/holo_orange_dark"
                 android:textSize="20dp" />
 
             <EditText
@@ -37,7 +37,7 @@
                 android:layout_marginLeft="5dp"
                 android:hint="Organisation"
                 android:inputType="text"
-                android:textColorHint="@android:color/holo_orange_light" />
+                android:textColorHint="@android:color/holo_orange_dark" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,20 +81,38 @@
                 android:inputType="date"
                 android:hint="DD/MM/YYYY"
                 android:focusable="false"
-                android:textColorHint="@android:color/holo_orange_light" />
+                android:textColorHint="@android:color/holo_orange_dark" />
+
+
+            <TextView
+                android:id="@+id/time_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Time:"
+                android:textColor="@android:color/black"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/time_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:clickable="true"
+                android:inputType="date"
+                android:hint="HH:MM"
+                android:focusable="false"
+                android:textColorHint="@android:color/holo_orange_dark" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_add_location_24"
-                android:id="@+id/venue_imagebutton"></ImageButton>
-
-
-
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_add_location_24"
+                    android:id="@+id/venue_imagebutton"></ImageButton>
             <EditText
                 android:id="@+id/venue_editText"
                 android:layout_width="280dp"
@@ -102,10 +120,13 @@
                 android:layout_marginLeft="35dp"
                 android:hint="Venue"
                 android:inputType="text"
-                android:textColorHint="@android:color/holo_orange_light" />
+
+                android:textColorHint="@android:color/holo_orange_dark" />
             </LinearLayout>
 
-            <ImageButton
+
+
+            <ImageView
                 android:id="@+id/poster_image"
                 android:layout_width="fill_parent"
                 android:layout_height="365dp"
@@ -122,10 +143,9 @@
                 android:layout_marginTop="10dp"
                 android:tooltipText="Please enter all the credentials"
                 android:background="@android:color/white"
-                android:textColor="@android:color/holo_orange_light"
+                android:textColor="@android:color/holo_orange_dark"
                 android:enabled="false"
-                android:text="Create" />
-            //android:onClick="createEvent"
+                android:text="Create"/>
 
         </LinearLayout>
     </ScrollView>
