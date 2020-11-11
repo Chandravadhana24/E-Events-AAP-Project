@@ -73,13 +73,13 @@ public class Public_Dashboard_Fragment extends Fragment implements RecyclerViewA
 
             // database.execSQL("CREATE TABLE IF NOT EXISTS event(event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
 
-            database.execSQL("CREATE TABLE IF NOT EXISTS event(" +
-                    "eventNo VARCHAR(20) primary key," +
+            database.execSQL("CREATE TABLE IF NOT EXISTS event(" + "userName VARCHAR(20),"+
+                    "eventNo VARCHAR(20) ," +
                     "event_name VARCHAR(20)," +
                     "organization VARCHAR(20)," +
                     "genre VARCHAR(20)," +
                     "eventDate VARCHAR(20)," +
-                    "eventTime VARCHAR(20));" );
+                    "eventTime VARCHAR(20),primary key (userName,eventNo));" );
 
             database.execSQL("CREATE TABLE IF NOT EXISTS myEvent(username VARCHAR(20),position VARCHAR(20), primary key(username,position));");
 
@@ -93,13 +93,13 @@ public class Public_Dashboard_Fragment extends Fragment implements RecyclerViewA
 
 
 
-                    list_of_Events.add(new Event(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5)));
+                    list_of_Events.add(new Event(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getString(6)));
                     stringBuffer = new StringBuffer();
                     Date date1 = null;
 
                     while (c.moveToNext()) {
                         //Log.d()
-                        list_of_Events.add(new Event(c.getString(0), c.getString(1), c.getString(2), c.getString(3),c.getString(4), c.getString(5)));
+                        list_of_Events.add(new Event(c.getString(0), c.getString(1), c.getString(2), c.getString(3),c.getString(4), c.getString(5), c.getString(6)));
 
                     }
                     //Toast.makeText(getContext(), stringBuffer, Toast.LENGTH_SHORT).show();

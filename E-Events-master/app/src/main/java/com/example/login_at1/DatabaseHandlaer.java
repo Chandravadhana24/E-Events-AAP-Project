@@ -106,4 +106,58 @@ public class DatabaseHandlaer extends SQLiteOpenHelper {
         return objectModelClassList;
     }
 
+    public void updateImage(modelClass objectModelClass)
+    {
+        try
+        {
+            SQLiteDatabase objectSqLiteDatabase=this.getWritableDatabase();
+            Bitmap imageToStoreBitmap=objectModelClass.getImage();
+            image_byteArray=new ByteArrayOutputStream();
+            imageToStoreBitmap.compress(Bitmap.CompressFormat.JPEG,100,image_byteArray);
+
+            imageInBytes=image_byteArray.toByteArray();
+            ContentValues objectContentValues= new ContentValues();
+
+
+            objectContentValues.put("image",imageInBytes);
+
+            objectSqLiteDatabase.execSQL("UPDATE imageInfo SET image='"+imageInBytes+"' WHERE imageName='"+objectModelClass.getImageNo()+"'");
+
+        }
+        catch (Exception e)
+        {
+
+        }
+    }
+    public void deleteImage(modelClass objectModelClass)
+    {
+        try
+        {
+            SQLiteDatabase objectSqLiteDatabase=this.getWritableDatabase();
+            objectSqLiteDatabase.execSQL("DELETE FROM imageInfo WHERE imageName='"+objectModelClass.getImageNo()+"';");
+            //long checkQuery=objectSqLiteDatabase.delete("imageInfo","imageName="+objectModelClass.getImageNo(),null);
+            Cursor c=objectSqLiteDatabase.rawQuery("SELECT imageName FROM imageInfo WHERE imageName>'"+objectModelClass.getImageNo()+"';",null);
+
+            if(c.getCount()!=0)
+            {
+                int ino=Integer.parseInt(c.getString(0));
+                ino=ino-1;
+                objectSqLiteDatabase.execSQL("UPDATE imageInfo SET imageName='"+Integer.toString(ino)+"' WHERE imageName='"+c.getString(0)+"';");
+                Toast.makeText(context,"image deleted",Toast.LENGTH_SHORT).show();
+                while(c.moveToNext())
+                {
+                    ino=Integer.parseInt(c.getString(0));
+                    ino=ino-1;
+                    objectSqLiteDatabase.execSQL("UPDATE imageInfo SET imageName='"+Integer.toString(ino)+"' WHERE imageName='"+c.getString(0)+"';");
+                    Toast.makeText(context,"image deleted",Toast.LENGTH_SHORT).show();
+                }
+            }
+            objectSqLiteDatabase.close();;
+        }
+        catch(Exception e)
+        {
+
+        }
+    }
+
 }

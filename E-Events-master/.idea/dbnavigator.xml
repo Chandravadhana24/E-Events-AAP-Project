@@ -24,26 +24,31 @@
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
     <loaded-nodes>
-      <connection connection-id="19ada8fe-7301-4819-8693-04ca075fd1ab">
-        <schema name="main" object-types="column, dataset trigger, constraint, view, table, index" />
+      <connection connection-id="f65290c6-976f-4ade-9d3a-149c0af0a907">
+        <schema name="main" object-types="index, constraint, table, column, dataset trigger, view" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="19ada8fe-7301-4819-8693-04ca075fd1ab">
+    <connection id="f65290c6-976f-4ade-9d3a-149c0af0a907">
       <console name="Connection" type="STANDARD" schema="main" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files>
-      <object connection-id="19ada8fe-7301-4819-8693-04ca075fd1ab" object-ref="schemas/main/tables/imageInfo" />
+      <object connection-id="f65290c6-976f-4ade-9d3a-149c0af0a907" object-ref="schemas/main/tables/users" />
     </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="19ada8fe-7301-4819-8693-04ca075fd1ab" />
+    <connection id="f65290c6-976f-4ade-9d3a-149c0af0a907" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="19ada8fe-7301-4819-8693-04ca075fd1ab" dataset="main.imageInfo" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="f65290c6-976f-4ade-9d3a-149c0af0a907" dataset="main.users" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="f65290c6-976f-4ade-9d3a-149c0af0a907" dataset="main.imageInfo" active-filter-id="">
+      <filter id="1ed75f99-d393-40fe-95c3-c39e98af58ec" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="image" operator="=" value="" active="true" />
+      </filter>
+    </filter-actions>
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -68,7 +73,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="19ada8fe-7301-4819-8693-04ca075fd1ab" active="true">
+      <connection id="f65290c6-976f-4ade-9d3a-149c0af0a907" active="true">
         <database>
           <name value="Connection" />
           <description value="" />
@@ -83,7 +88,7 @@
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="D:\Databases\mydb.db" schema="main" />
+            <file path="D:\Databases\Events" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />

@@ -55,6 +55,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
     Uri imageFilePath;
     Bitmap imageToStore;
     DatabaseHandlaer objectDatabaseHandler;
+    String uname;
 
 
     @Override
@@ -75,13 +76,16 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         SharedPreferences userN=getSharedPreferences("EventNo", Context.MODE_PRIVATE);
         String p=userN.getString("number","0");
 
+        SharedPreferences userName=getSharedPreferences("curruser", Context.MODE_PRIVATE);
+        uname=userName.getString("username","NA");
+
         Log.d("size","Preference size:"+p);
 
         no= Integer.parseInt(p);
         no++;
 
         db=openOrCreateDatabase("Events",MODE_PRIVATE,null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS event(eventNo VARCHAR(20),event_name VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),eventTime VARCHAR(20));");
+        db.execSQL("CREATE TABLE IF NOT EXISTS event(userName VARCHAR(20),eventNo VARCHAR(20),event_name VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),eventTime VARCHAR(20),primary key(eventNo,userName));");
 
         date_editText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,7 +232,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
                     Log.d("pic","inside if");
                 }
 
-                db.execSQL("INSERT INTO event VALUES('"+ no + "'," +
+                db.execSQL("INSERT INTO event VALUES('"+ uname + "'," +"'"+ no + "'," +
                         "'"+event_name.getText().toString()+"'," +
                         "'"+organisation_name.getText().toString()+"'," +
                         "'"+whichGenre+"'," +
@@ -239,6 +243,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
                 Intent myIntent = new Intent(Create_Event.this,nav_drawer.class);
 
                 startActivity(myIntent);
+                finish();
 
             }
         });
@@ -258,23 +263,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 24 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            /*Uri imageUri = data.getData();
-            ImageView imageView = findViewById(R.id.poster_image);
-            imageView.setImageURI(imageUri);
-            Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            int width = bitmap.getWidth();
-            int height = bitmap.getHeight();
 
-            int size = bitmap.getRowBytes() * bitmap.getHeight();
-            ByteBuffer byteBuffer = ByteBuffer.allocate(size);
-            bitmap.copyPixelsToBuffer(byteBuffer);
-            image_byteArray = byteBuffer.array();
-            Log.d("IS image arr null",Boolean.toString(image_byteArray==null));*/
 
             imageFilePath= data.getData();
             try {
@@ -293,10 +282,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    public void storeImage(View view)
-    {
 
-    }
 
 
 }

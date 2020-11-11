@@ -3,6 +3,7 @@ package com.example.login_at1;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,7 +24,7 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
     TextView name,date,organization,genre,time;
     ImageView img;
     Button register;
-    String num,uname,ename="",edate="",etime="",eorg="",egen="";
+    String num,uname,username,ename="",edate="",etime="",eorg="",egen="";
     SQLiteDatabase db;
     DatabaseHandlaer objectDatabaseHandler;
     int no;
@@ -59,16 +60,17 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
 
         if(db!= null)
         {
-            Cursor c = db.rawQuery("SELECT eventNo,event_name,organization,genre,eventDate,eventTime FROM event WHERE eventNo='"+num.toString()+"';", null);
+            Cursor c = db.rawQuery("SELECT userName,eventNo,event_name,organization,genre,eventDate,eventTime FROM event WHERE eventNo='"+num.toString()+"';", null);
 
             if(c.moveToFirst())
             {
                 img.setImageBitmap(posters.get(no-1).getImage());
-                ename=c.getString(1);
-                edate=c.getString(4);
-                eorg=c.getString(2);
-                egen=c.getString(3);
-                etime=c.getString(5);
+                username=c.getString(0);
+                ename=c.getString(2);
+                edate=c.getString(5);
+                eorg=c.getString(3);
+                egen=c.getString(4);
+                etime=c.getString(6);
             }
 
 
@@ -80,7 +82,11 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
 
             Cursor c1 = db.rawQuery("SELECT username,position FROM myEvent where position='"+num+"' and username='"+uname+"';",null);
 
-            if(c1.moveToFirst())
+            if(username.equalsIgnoreCase(uname))
+            {
+                register.setText("Modify Event");
+            }
+            else if(c1.moveToFirst())
             {
                 register.setText("Un-Register");
             }
@@ -100,6 +106,13 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
 
     @Override
     public void onClick(View view) {
+
+        if(register.getText().toString().equals("Modify Event"))
+        {
+            Intent i=new Intent(this,modifyEvents.class);
+            i.putExtra("position",num);
+            startActivity(i);
+        }
         if(register.getText().toString().equals("Un-Register"))
         {
             Cursor c1 = db.rawQuery("SELECT username,position FROM myEvent where position='"+num+"' and username='"+uname+"';",null);
@@ -118,4 +131,5 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
             register.setText("Un-Register");
         }
     }
+
 }

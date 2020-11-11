@@ -39,4 +39,12 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="chooser_title">Share this link with</string>
+
+
+    <string-array name="options">
+        <item>Update</item>
+        <item>Delete</item>
+        <item>View Participants</item>
+    </string-array>
+
 </resources>
