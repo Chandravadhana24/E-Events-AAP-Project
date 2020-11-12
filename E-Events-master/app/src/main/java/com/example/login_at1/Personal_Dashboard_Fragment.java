@@ -65,7 +65,7 @@ public class Personal_Dashboard_Fragment extends Fragment implements RecyclerVie
 
             // database.execSQL("CREATE TABLE IF NOT EXISTS event(event VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),image_byteArr BLOB);");
 
-            database.execSQL("CREATE TABLE IF NOT EXISTS event(userName VARCHAR(20),eventNo VARCHAR(20) primary key,event_name VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),eventTime VARCHAR(20),image_byteArr BLOB);");
+            database.execSQL("CREATE TABLE IF NOT EXISTS event(userName VARCHAR(20),eventNo VARCHAR(20) primary key,event_name VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),eventTime VARCHAR(20), eventLocation VARCHAR (100), image_byteArr BLOB);");
 
             database.execSQL("CREATE TABLE IF NOT EXISTS myEvent(username VARCHAR(20),position VARCHAR(20), primary key(username,position));");
 

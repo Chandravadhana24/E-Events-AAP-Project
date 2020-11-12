@@ -111,15 +111,23 @@
                 android:hint="HH:MM"
                 android:focusable="false"
                 android:textColorHint="@android:color/holo_orange_dark" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_add_location_24"
+                android:id="@+id/venue_imagebutton"></ImageButton>
             <EditText
                 android:id="@+id/venue_editText"
-                android:layout_width="match_parent"
+                android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:hint="Venue"
                 android:inputType="text"
-                android:textColorHint="@android:color/holo_orange_dark" />
 
+                android:textColorHint="@android:color/holo_orange_dark" />
             <ImageView
                 android:id="@+id/poster_image"
                 android:layout_width="fill_parent"

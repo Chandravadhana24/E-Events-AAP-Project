@@ -22,10 +22,10 @@ import java.util.ArrayList;
 
 public class eventDetails extends AppCompatActivity  implements View.OnClickListener {
 
-    TextView name,date,organization,genre,time;
+    TextView name,date,organization,genre,time,venue;
     ImageView img;
     Button register;
-    String num,uname,username,ename="",edate="",etime="",eorg="",egen="";
+    String num,uname,username,ename="",edate="",etime="",eorg="",egen="",elocation="";
     SQLiteDatabase db;
     private NotificationHelper mNotificationHelper;
     DatabaseHandlaer objectDatabaseHandler;
@@ -54,6 +54,7 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
         genre=(TextView)findViewById(R.id.eventGenre);
         register=(Button)findViewById(R.id.reg);
         mNotificationHelper = new NotificationHelper(eventDetails.this);
+        venue=findViewById(R.id.eventLocation);
 
         Bundle b=getIntent().getExtras();
         num=b.getString("position");
@@ -64,7 +65,7 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
 
         if(db!= null)
         {
-            Cursor c = db.rawQuery("SELECT userName,eventNo,event_name,organization,genre,eventDate,eventTime FROM event WHERE eventNo='"+num.toString()+"';", null);
+            Cursor c = db.rawQuery("SELECT userName,eventNo,event_name,organization,genre,eventDate,eventTime,eventLocation FROM event WHERE eventNo='"+num.toString()+"';", null);
 
             if(c.moveToFirst())
             {
@@ -75,6 +76,7 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
                 eorg=c.getString(3);
                 egen=c.getString(4);
                 etime=c.getString(6);
+                elocation=c.getString(7);
             }
 
 
@@ -83,6 +85,7 @@ public class eventDetails extends AppCompatActivity  implements View.OnClickList
             time.setText("Start Time: " + etime);
             organization.setText("Organized by "+eorg);
             genre.setText("Genre: "+egen);
+            venue.setText("Location: "+elocation);
 
             Cursor c1 = db.rawQuery("SELECT username,position FROM myEvent where position='"+num+"' and username='"+uname+"';",null);
 

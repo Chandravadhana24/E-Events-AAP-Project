@@ -79,7 +79,9 @@ public class Public_Dashboard_Fragment extends Fragment implements RecyclerViewA
                     "organization VARCHAR(20)," +
                     "genre VARCHAR(20)," +
                     "eventDate VARCHAR(20)," +
-                    "eventTime VARCHAR(20),primary key (userName,eventNo));" );
+                    "eventTime VARCHAR(20)," +
+                    "eventLocation VARCHAR(100)," +
+                    "primary key (userName,eventNo));" );
 
             database.execSQL("CREATE TABLE IF NOT EXISTS myEvent(username VARCHAR(20),position VARCHAR(20), primary key(username,position));");
 

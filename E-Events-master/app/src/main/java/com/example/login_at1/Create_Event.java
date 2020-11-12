@@ -124,7 +124,7 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
         no++;
 
         db=openOrCreateDatabase("Events",MODE_PRIVATE,null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS event(userName VARCHAR(20),eventNo VARCHAR(20),event_name VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),eventTime VARCHAR(20),primary key(eventNo,userName));");
+        db.execSQL("CREATE TABLE IF NOT EXISTS event(userName VARCHAR(20),eventNo VARCHAR(20),event_name VARCHAR(20),organization VARCHAR(20),genre VARCHAR(20),eventDate VARCHAR(20),eventTime VARCHAR(20), eventLocation VARCHAR(100), primary key(eventNo,userName));");
 
         date_editText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -264,7 +264,8 @@ public class Create_Event extends AppCompatActivity implements AdapterView.OnIte
                         "'"+organisation_name.getText().toString()+"'," +
                         "'"+whichGenre+"'," +
                         "'"+date_editText.getText().toString() + "'," +
-                        "'" + time_editText.getText().toString() + "');");
+                        "'" + time_editText.getText().toString() + "'," +
+                        "'"+venue_editText.getText().toString()+"');");
 
                 Toast.makeText(Create_Event.this,"Event created",Toast.LENGTH_SHORT ).show();
                 Intent myIntent = new Intent(Create_Event.this,nav_drawer.class);
