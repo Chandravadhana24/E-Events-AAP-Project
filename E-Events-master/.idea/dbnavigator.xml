@@ -23,26 +23,22 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="986a3135-699a-4590-b751-74bac57f3650">
+        <schema name="main" object-types="view, table" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="f65290c6-976f-4ade-9d3a-149c0af0a907">
-      <console name="Connection" type="STANDARD" schema="" session="Main" />
+    <connection id="986a3135-699a-4590-b751-74bac57f3650">
+      <console name="Connection1" type="STANDARD" schema="" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="f65290c6-976f-4ade-9d3a-149c0af0a907" />
-  </component>
-  <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="f65290c6-976f-4ade-9d3a-149c0af0a907" dataset="main.users" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="f65290c6-976f-4ade-9d3a-149c0af0a907" dataset="main.imageInfo" active-filter-id="">
-      <filter id="1ed75f99-d393-40fe-95c3-c39e98af58ec" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
-        <condition column="image" operator="=" value="" active="true" />
-      </filter>
-    </filter-actions>
+    <connection id="986a3135-699a-4590-b751-74bac57f3650" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -67,9 +63,9 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="f65290c6-976f-4ade-9d3a-149c0af0a907" active="true">
+      <connection id="986a3135-699a-4590-b751-74bac57f3650" active="true">
         <database>
-          <name value="Connection" />
+          <name value="Connection1" />
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
@@ -82,7 +78,8 @@
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="D:\Databases\Events" schema="main" />
+            <file path="C:\Users\ankit\Desktop\eventsandmydb\Events" schema="main" />
+            <file path="C:\Users\ankit\Desktop\eventsandmydb\mydb.db" schema="" />
           </files>
           <type value="NONE" />
           <user value="" />

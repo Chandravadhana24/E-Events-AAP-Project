@@ -46,6 +46,7 @@ public class DatabaseHandlaer extends SQLiteOpenHelper {
 
     public void storeImage(modelClass objectModelClass)
     {
+
         try
         {
             SQLiteDatabase objectSqLiteDatabase=this.getWritableDatabase();
@@ -59,17 +60,28 @@ public class DatabaseHandlaer extends SQLiteOpenHelper {
             objectContentValues.put("imageName",objectModelClass.getImageNo());
             objectContentValues.put("image",imageInBytes);
 
-            long checkQuery=objectSqLiteDatabase.insert("imageInfo",null,objectContentValues);
+            Cursor c=objectSqLiteDatabase.rawQuery("SELECT * FROM imageInfo WHERE imageName='"+objectModelClass.getImageNo()+"';",null);
 
-            if(checkQuery!=0)
+            if(c.getCount()!=0)
             {
-                Toast.makeText(context,"Image added",Toast.LENGTH_SHORT).show();
-                objectSqLiteDatabase.close();
+                objectSqLiteDatabase.execSQL("UPDATE imageInfo SET image='"+imageInBytes+"';");
             }
             else
             {
-                Toast.makeText(context,"Failed to load image",Toast.LENGTH_SHORT).show();
+                long checkQuery=objectSqLiteDatabase.insert("imageInfo",null,objectContentValues);
+
+                if(checkQuery!=0)
+                {
+                    Toast.makeText(context,"Image added",Toast.LENGTH_SHORT).show();
+                    objectSqLiteDatabase.close();
+                }
+                else
+                {
+                    Toast.makeText(context,"Failed to load image",Toast.LENGTH_SHORT).show();
+                }
             }
+
+
         }
         catch(Exception e)
         {

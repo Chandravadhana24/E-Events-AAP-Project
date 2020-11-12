@@ -40,7 +40,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
-        holder.poster.setImageBitmap(posters.get(position).getImage());
+        //holder.poster.setImageBitmap(posters.get(position).getImage());
+        int no=Integer.parseInt(allEvents_list.get(position).getNo());
+        holder.poster.setImageBitmap(posters.get(no-1).getImage());
+
         holder.event_title.setText(allEvents_list.get(position).getNo()+". "+allEvents_list.get(position).getName());
         holder.org_name.setText(allEvents_list.get(position).getOrganisation());
         holder.genre.setText(allEvents_list.get(position).getType());

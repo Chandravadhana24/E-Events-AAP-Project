@@ -276,7 +276,7 @@ public class modifyEvents extends AppCompatActivity implements AdapterView.OnIte
                         eno-=1;
 
                         db.execSQL("UPDATE event set eventNo='"+Integer.toString(eno)+"' WHERE eventNo='"+c.getString(0)+"';");
-                        objectDatabaseHandler.deleteImage(new modelClass(num,imageToStore));
+                        //objectDatabaseHandler.deleteImage(new modelClass(num,imageToStore));
 
                         while(c.moveToNext())
                         {
