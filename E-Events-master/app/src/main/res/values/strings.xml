@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Login_AT1</string>
+    <string name="app_name">E-Events</string>
     <string name="no_events">No Events</string>
     <string name="my_events">My Events</string>
     <string name="username">Username</string>
